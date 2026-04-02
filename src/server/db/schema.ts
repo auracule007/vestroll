@@ -400,6 +400,19 @@ export const organizationWallets = pgTable("organization_wallets", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const organizationFiatBalances = pgTable("organization_fiat_balances", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  organizationId: uuid("organization_id")
+    .references(() => organizations.id, { onDelete: "cascade" })
+    .notNull()
+    .unique(),
+  currency: varchar("currency", { length: 3 }).default("NGN").notNull(),
+  /** Amount in kobo/cents to avoid floating point issues */
+  balance: bigint("balance", { mode: "bigint" }).default(0n).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const kybVerifications = pgTable("kyb_verifications", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
