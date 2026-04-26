@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MOCK_ASSETS, generateMockTransactions } from "@/lib/mock-data";
 import { BalanceSection } from "@/components/features/finance/balance-section";
 import { AssetsGrid } from "@/components/features/finance/assets-grid";
@@ -9,6 +9,7 @@ import Table from "@/components/shared/table/Table";
 import { TableColumn } from "@/components/shared/table/TableHeader";
 import { Transaction } from "@/types/finance.types";
 import { UsdtIcon } from "@/../public/svg";
+import { formatNairaFromKobo } from "@/lib/format-naira";
 
 const mockTransactions = generateMockTransactions(80);
 
@@ -24,6 +25,25 @@ const transactionColumns: TableColumn[] = [
 export default function FinancePage() {
   const [search, setSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [ngnBalance, setNgnBalance] = useState<string>("₦0.00");
+
+  // Fetch organization fiat balance
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const res = await fetch("/api/v1/finance/balance");
+        if (res.ok) {
+          const json = await res.json();
+          const kobo = json.data?.balance ?? json.balance ?? 0;
+          setNgnBalance(formatNairaFromKobo(kobo));
+        }
+      } catch (error) {
+        console.error("Failed to fetch NGN balance:", error);
+        // Keep default 0
+      }
+    };
+    fetchBalance();
+  }, []);
 
   const filteredTransactions = mockTransactions.filter((tx) =>
     [tx.id, tx.description, tx.amount, tx.status]
@@ -163,7 +183,7 @@ export default function FinancePage() {
         >
           {/* Balance Section */}
           <div className="flex flex-col md:flex-row w-full gap-4 md:gap-6 mb-2">
-            <BalanceSection balance="$5,050.00" change="-0.0051% ($0.99)" />
+            <BalanceSection balance={ngnBalance} change="" />
             <BalanceSection balance="$5,050.00" change="-0.0051% ($0.99)" />
           </div>
 
