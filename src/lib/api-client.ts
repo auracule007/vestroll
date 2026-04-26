@@ -45,7 +45,8 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
   if (!response.ok) {
     if (data) {
-      const errorDetail = data.detail || data.message || data.title || "An error occurred";
+      const errorDetail =
+        data.detail || data.message || data.title || "An error occurred";
       throw new RequestError({
         title: data.title || response.statusText || "Error",
         status: data.status || response.status,
@@ -53,11 +54,13 @@ async function handleResponse<T>(response: Response): Promise<T> {
         errors: data.errors,
       });
     }
-    
+
     throw new RequestError({
       title: response.statusText || "Unknown Error",
       status: response.status,
-      detail: rawText ? `Server Error: ${rawText.substring(0, 100)}` : "An unexpected error occurred while communicating with the server.",
+      detail: rawText
+        ? `Server Error: ${rawText.substring(0, 100)}`
+        : "An unexpected error occurred while communicating with the server.",
     });
   }
 

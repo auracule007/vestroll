@@ -29,11 +29,9 @@ import { LoginAttemptService } from "./login-attempt.service";
 import { LogoutService } from "./logout.service";
 import { and, eq } from "drizzle-orm";
 import { LoginInput } from "../validations/login.schema";
-import {
-  RegisterInput,
-  PasskeyRegistrationInput,
-} from "../validations/auth.schema";
+import { RegisterInput, PasskeyRegistrationInput } from "../validations/auth.schema";
 import { Logger } from "./logger.service";
+import { EmailService } from "./email.service";
 
 /** Max age for a passkey registration challenge (WebAuthn-style short TTL). */
 const PASSKEY_REGISTRATION_CHALLENGE_TTL_MS = 5 * 60 * 1000;
@@ -121,6 +119,9 @@ export class AuthService {
       });
 
       Logger.info("Email verification OTP generated", { email: businessEmail });
+      
+      // Send the OTP via email
+      await EmailService.sendVerificationOTPEmail(user.email, user.firstName, otp);
       
       if (process.env.NODE_ENV !== "production") {
         Logger.debug("User registered successfully", { email: user.email });
