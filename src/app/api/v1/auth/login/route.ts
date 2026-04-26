@@ -47,9 +47,10 @@ export const POST = withHandler(
     const response = ApiResponse.success(result, result.message);
 
     // Set refresh token cookie if provided (e.g., during OTP-based login or social auth)
-    if (result.refreshToken) {
+    const resultWithOptionalRefreshToken = result as typeof result & { refreshToken?: string };
+    if (resultWithOptionalRefreshToken.refreshToken) {
       const isProd = process.env.NODE_ENV === "production";
-      response.cookies.set("refreshToken", result.refreshToken, {
+      response.cookies.set("refreshToken", resultWithOptionalRefreshToken.refreshToken, {
         httpOnly: true,
         secure: isProd,
         sameSite: "lax",

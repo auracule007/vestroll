@@ -35,7 +35,7 @@ describe("POST /api/v1/auth/register", () => {
       agreement: true,
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(201);
     const data = await response.json();
@@ -45,15 +45,15 @@ describe("POST /api/v1/auth/register", () => {
   });
 
    it("should return 400 for validation errors (invalid email)", async () => {
-    const req = createMockRequest({
-      firstName: "Test",
-      lastName: "User",
-      businessEmail: "invalid-email",
-      password: "Password123",
-      agreement: true,
-    });
+     const req = createMockRequest({
+       firstName: "Test",
+       lastName: "User",
+       businessEmail: "invalid-email",
+       password: "Password123",
+       agreement: true,
+     });
 
-    const response = await POST(req);
+     const response = await POST(req, {});
 
      expect(response.status).toBe(400);
      const data = await response.json();
@@ -69,7 +69,7 @@ describe("POST /api/v1/auth/register", () => {
        agreement: true,
      });
 
-     const response = await POST(req);
+     const response = await POST(req, {});
 
      expect(response.status).toBe(400);
      const data = await response.json();
@@ -90,7 +90,7 @@ describe("POST /api/v1/auth/register", () => {
       agreement: true,
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(409);
     const data = await response.json();
@@ -109,7 +109,7 @@ describe("POST /api/v1/auth/register", () => {
       agreement: true,
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(500);
     const data = await response.json();

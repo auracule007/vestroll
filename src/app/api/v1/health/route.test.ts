@@ -54,7 +54,7 @@ describe("GET /api/v1/health", () => {
       ledgerAgeSeconds: 12,
     });
 
-    const response = await GET(createMockRequest());
+    const response = await GET(createMockRequest(), {});
 
     expect(response.status).toBe(200);
     const data = await response.json();
@@ -73,7 +73,7 @@ describe("GET /api/v1/health", () => {
       ledgerAgeSeconds: 61,
     });
 
-    const response = await GET(createMockRequest());
+    const response = await GET(createMockRequest(), {});
 
     expect(response.status).toBe(200);
     const data = await response.json();
@@ -90,7 +90,7 @@ describe("GET /api/v1/health", () => {
       ledgerAgeSeconds: 12,
     });
 
-    const response = await GET(createMockRequest());
+    const response = await GET(createMockRequest(), {});
 
     expect(response.status).toBe(503);
     const data = await response.json();
@@ -105,7 +105,7 @@ describe("GET /api/v1/health", () => {
       new Error("Horizon unavailable"),
     );
 
-    const response = await GET(createMockRequest());
+    const response = await GET(createMockRequest(), {});
 
     expect(response.status).toBe(503);
     const data = await response.json();
