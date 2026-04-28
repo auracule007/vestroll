@@ -107,8 +107,8 @@ export async function POST(req: NextRequest) {
 
         const parsed = TimeOffRequestSchema.safeParse(body);
         if (!parsed.success) {
-            const fieldErrors = parsed.error.errors.map((e) => ({
-                field: e.path.join("."),
+            const fieldErrors = parsed.error.issues.map((e: any) => ({
+                field: e.path?.join(".") || "unknown",
                 message: e.message,
             }));
             return ApiResponse.error("Validation failed", 400, { fields: fieldErrors });
