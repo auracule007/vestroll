@@ -30,14 +30,8 @@ describe("POST /api/v1/auth/login", () => {
 
   it("should successfully login with valid credentials", async () => {
     const mockResult = {
-      accessToken: "access-token",
-      refreshToken: "refresh-token",
-      user: {
-        id: "user-123",
-        email: "test@example.com",
-        firstName: "Test",
-        lastName: "User",
-      },
+      email: "test@example.com",
+      message: "A verification code has been sent to your email.",
     };
 
     vi.mocked(AuthService.login).mockResolvedValue(mockResult);
@@ -48,14 +42,12 @@ describe("POST /api/v1/auth/login", () => {
       rememberMe: true,
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(200);
     const data = await response.json();
     expect(data.success).toBe(true);
     expect(data.data).toEqual(mockResult);
-
-    expect(response.cookies.get("refreshToken")?.value).toBe("refresh-token");
   });
 
   it("should return 400 for validation errors", async () => {
@@ -64,7 +56,7 @@ describe("POST /api/v1/auth/login", () => {
 
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(400);
     const data = await response.json();
@@ -82,7 +74,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "wrong-password",
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(401);
     const data = await response.json();
@@ -102,7 +94,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "password123",
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(403);
     const data = await response.json();
@@ -120,7 +112,7 @@ describe("POST /api/v1/auth/login", () => {
       password: "password123",
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(500);
     const data = await response.json();

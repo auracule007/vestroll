@@ -1,4 +1,4 @@
-import { db, organizationWallets } from "@/server/db";
+import { db, organizationWallets, organizationFiatBalances } from "@/server/db";
 import { eq } from "drizzle-orm";
 import { BadRequestError } from "@/server/utils/errors";
 
@@ -119,5 +119,23 @@ export class FinanceWalletService {
           .returning();
 
     return formatWalletResponse(wallet);
+  }
+
+  /**
+   * Get the organization's fiat balance (NGN) in kobo.
+   * Returns 0 if no balance record exists.
+   */
+  static async getOrganizationFiatBalance(organizationId: string): Promise<bigint> {
+    if (!organizationId) {
+      throw new BadRequestError("User is not associated with any organization");
+    }
+
+    const [record] = await db
+      .select({ balance: organizationFiatBalances.balance })
+      .from(organizationFiatBalances)
+      .where(eq(organizationFiatBalances.organizationId, organizationId))
+      .limit(1);
+
+    return record?.balance ?? BigInt(0);
   }
 }
