@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import AppShell from "@/components/layout/app-shell";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import PageTransition from "@/components/shared/animations/PageTransition";

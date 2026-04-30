@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "tsx scripts/migrate.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:reset:local": "dropdb --if-exists vestroll_dev && createdb vestroll_dev && npm run db:migrate && npm run db:seed:local",
