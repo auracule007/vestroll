@@ -160,8 +160,8 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       const croppedFile = await getCroppedImage();
       await onSave(croppedFile);
       handleCancel();
-    } catch (error) {
-      console.error("Failed to save image:", error);
+    } catch (err) {
+      console.error("Failed to save image:", err);
       error("Failed to save image. Please try again.");
     } finally {
       setIsLoading(false);
