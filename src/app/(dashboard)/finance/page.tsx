@@ -376,6 +376,7 @@ export default function FinancePage() {
               onSelectAll={handleSelectAll}
               renderCell={renderTransactionCell}
               renderMobileCell={renderMobileCell}
+              isLoading={isLoadingTransactions}
               showPagination={true}
               itemsPerPage={itemsPerPage}
               currentPage={currentPage}

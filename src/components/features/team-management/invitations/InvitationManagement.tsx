@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Filter, UserPlus, RefreshCw } from "lucide-react";
 import { InvitationCard } from "./InvitationCard";
 import { CreateInvitationForm } from "./CreateInvitationForm";
+import { CardSkeleton } from "@/components/ui/skeleton";
 
 interface Invitation {
   id: string;
@@ -208,7 +209,13 @@ export function InvitationManagement({
 
       {/* Invitations List */}
       <div className="space-y-4">
-        {filteredInvitations.length === 0 ? (
+        {isLoading && invitations.length === 0 ? (
+          <>
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+          </>
+        ) : filteredInvitations.length === 0 ? (
           <Card>
             <CardContent className="p-8 text-center">
               <UserPlus className="mx-auto h-12 w-12 text-muted-foreground mb-4" />

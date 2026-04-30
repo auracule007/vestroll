@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Table from "@/components/shared/table/Table";
 import { TableColumn } from "@/components/shared/table/TableHeader";
+import { CardSkeleton } from "@/components/ui/skeleton";
 import { invoiceMetricsData } from "@/constants";
 import { useRouter } from "next/navigation";
 import { RoutePaths } from "@/routes/routesPath";
@@ -187,9 +188,16 @@ const Invoices: React.FC = () => {
           animate="visible"
           className="flex flex-col flex-1 w-full h-full px-4 py-4 "
         >
-          {!loading && invoices.length > 0 && (
-            <div className="gap-4 w-full flex overflow-x-auto mb-4 sm:grid sm:grid-cols-4 sm:overflow-x-visible">
-              {invoiceMetricsData.map((metric) => (
+          <div className="gap-4 w-full flex overflow-x-auto mb-4 sm:grid sm:grid-cols-4 sm:overflow-x-visible">
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="min-w-3xs w-full">
+                  <CardSkeleton />
+                </div>
+              ))
+            ) : (
+              invoices.length > 0 &&
+              invoiceMetricsData.map((metric) => (
                 <motion.div
                   variants={itemVariants}
                   key={metric.title}
@@ -218,9 +226,9 @@ const Invoices: React.FC = () => {
                     </div>
                   </div>
                 </motion.div>
-              ))}
-            </div>
-          )}
+              ))
+            )}
+          </div>
 
           <motion.div variants={itemVariants}>
             <Table
@@ -236,6 +244,7 @@ const Invoices: React.FC = () => {
               onSelectAll={handleSelectAll}
               onRowClick={handleRowClick}
               renderCell={renderInvoiceCell}
+              isLoading={loading}
               emptyTitle={search ? "No invoices found" : "No invoices yet"}
               emptyDescription={
                 search

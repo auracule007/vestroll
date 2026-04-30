@@ -6,6 +6,7 @@ import { Filter, ChevronDown, ShareIcon, CheckCircle, XCircle, Loader2 } from "l
 import Image from "next/image";
 import searchIcon from "@/../public/images/search-payroll.png";
 import { FinanceService, PayrollItem } from "@/lib/api/finance";
+import { TableSkeleton } from "@/components/ui/skeleton";
 import { RequestError } from "@/lib/api-client";
 import useModal from "@/hooks/useModal";
 
@@ -230,9 +231,8 @@ export default function PayrollPage() {
               {/* Payroll Table */}
               <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm dark:bg-gray-900 dark:border-gray-800">
                 {isLoading ? (
-                  <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin text-[#5E2A8C] mb-3" />
-                    <p className="text-sm text-[#6B7280] dark:text-gray-400">Loading payroll data...</p>
+                  <div className="p-6">
+                    <TableSkeleton rows={5} columns={6} />
                   </div>
                 ) : fetchError ? (
                   <div className="flex flex-col items-center justify-center py-16 px-4 text-center">

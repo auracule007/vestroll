@@ -5,6 +5,7 @@ import TableContent from "./TableContent";
 import TableFilterHeader from "./TableFilterHeader";
 import TableHeader, { TableColumn } from "./TableHeader";
 import Pagination from "@/components/ui/Pagination";
+import { TableSkeleton } from "@/components/ui/skeleton";
 
 interface TableProps<T = any> {
   data: T[];
@@ -50,6 +51,8 @@ interface TableProps<T = any> {
   // Filter header props
   SearchIcon?: React.ComponentType;
   FilterIcon?: React.ComponentType;
+
+  isLoading?: boolean;
 }
 
 const Table = <T extends Record<string, any>>({
@@ -84,6 +87,7 @@ const Table = <T extends Record<string, any>>({
   getItemId,
   SearchIcon,
   FilterIcon,
+  isLoading = false,
 }: TableProps<T>) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
@@ -181,20 +185,24 @@ const Table = <T extends Record<string, any>>({
           onSelectAll={handleSelectAll}
           allSelected={showPagination ? allSelected : isAllDataSelected}
         />
-        <TableContent
-          data={paginatedData}
-          columns={columns}
-          search={search}
-          showCheckbox={showCheckbox}
-          selectedItems={selectedItems}
-          onSelectItem={onSelectItem}
-          onRowClick={onRowClick}
-          renderCell={renderCell}
-          emptyTitle={emptyTitle}
-          emptyDescription={emptyDescription}
-          getItemId={getItemId}
-          renderMobileCell={renderMobileCell}
-        />
+        {isLoading ? (
+          <TableSkeleton rows={itemsPerPage} columns={columns.length} />
+        ) : (
+          <TableContent
+            data={paginatedData}
+            columns={columns}
+            search={search}
+            showCheckbox={showCheckbox}
+            selectedItems={selectedItems}
+            onSelectItem={onSelectItem}
+            onRowClick={onRowClick}
+            renderCell={renderCell}
+            emptyTitle={emptyTitle}
+            emptyDescription={emptyDescription}
+            getItemId={getItemId}
+            renderMobileCell={renderMobileCell}
+          />
+        )}
       </div>
 
       {showPagination && activeTotalPages > 1 && (

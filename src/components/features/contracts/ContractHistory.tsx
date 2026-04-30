@@ -9,6 +9,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import { cn } from "@/utils/classNames";
 import FilterModal, { FilterSelection } from "./ui/FilterModal";
 import Link from "next/link";
+import { CardSkeleton } from "@/components/ui/skeleton";
 import { formatDateRange } from "@/utils/date";
 
 interface ContractHistoryProps {
@@ -213,7 +214,14 @@ function ContractHistory({ contracts, loading = false }: ContractHistoryProps) {
       )}
 
       {loading ? (
-        <div className="py-12 text-center text-gray-400">Loading contracts…</div>
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
       ) : filteredContracts.length > 0 ? (
         <motion.section
           variants={containerVariants}
