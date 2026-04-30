@@ -12,6 +12,7 @@ interface DesktopHeaderProps {
     miniAvatar?: string | StaticImageData;
   };
   onSearch?: (value: string) => void;
+  balance?: string;
 }
 
 import { ThemeToggle } from "../shared/theme-toggle";
@@ -24,6 +25,7 @@ export default function DesktopHeader({
     miniAvatar: "/avatar/Component 4.svg",
   },
   onSearch,
+  balance,
 }: DesktopHeaderProps) {
   return (
     <header className="hidden lg:flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3 dark:border-gray-800 dark:bg-gray-900">
@@ -55,6 +57,15 @@ export default function DesktopHeader({
       {/* Right side */}
       <div className="flex items-center gap-6">
         <ThemeToggle />
+
+        {/* Organization Balance - shown if provided */}
+        {balance && (
+          <div className="hidden md:block">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              {balance}
+            </span>
+          </div>
+        )}
 
         {/* Notification */}
         <button className="relative rounded-full border border-[#DCE0E5] p-2 hover:bg-gray-100 focus:outline-none dark:border-gray-700 dark:hover:bg-gray-800">

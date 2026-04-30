@@ -353,9 +353,8 @@ run("InvitationService", () => {
         page: 1,
         limit: 3,
       });
-
-      expect(result.invitations).toHaveLength(3);
-      expect(result.total).toBe(5);
+      expect(result.data).toHaveLength(3);
+      expect(result.meta.total).toBe(5);
     });
 
     it("should filter invitations by status", async () => {
@@ -392,9 +391,9 @@ run("InvitationService", () => {
         status: "pending",
       });
 
-      expect(result.invitations).toHaveLength(1);
-      expect(result.invitations[0].email).toBe("pending@example.com");
-      expect(result.invitations[0].status).toBe("pending");
+      expect(result.data).toHaveLength(1);
+      expect(result.data[0].email).toBe("pending@example.com");
+      expect(result.data[0].status).toBe("pending");
     });
   });
 

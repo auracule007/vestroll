@@ -16,6 +16,7 @@ interface AppShellProps {
     userType?: string;
     avatar?: string | StaticImageData;
   };
+  balance?: string;
 }
 
 export default function AppShell({
@@ -26,6 +27,7 @@ export default function AppShell({
     userType: "Administrator",
     avatar: avatar,
   },
+  balance,
 }: AppShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -41,7 +43,7 @@ export default function AppShell({
 
         <div className="flex-1 lg:ml-72">
           {/* Top Navigation Header */}
-          <DesktopHeader user={user} />
+          <DesktopHeader user={user} balance={balance} />
 
           <header className="bg-white border-b border-[#DCE0E5] px-4 sm:px-6 py-2 lg:hidden dark:bg-gray-900 dark:border-gray-800">
             <div className="flex items-center justify-between">

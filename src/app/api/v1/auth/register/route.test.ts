@@ -14,6 +14,7 @@ describe("POST /api/v1/auth/register", () => {
   const createMockRequest = (body: Record<string, unknown>): NextRequest => {
     return {
       json: async () => body,
+      headers: new Headers(), // provide a real Headers instance
     } as NextRequest;
   };
 
@@ -34,7 +35,7 @@ describe("POST /api/v1/auth/register", () => {
       agreement: true,
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(201);
     const data = await response.json();
@@ -43,38 +44,38 @@ describe("POST /api/v1/auth/register", () => {
     expect(data.data).toEqual(mockResult);
   });
 
-  it("should return 400 for validation errors (invalid email)", async () => {
-    const req = createMockRequest({
-      firstName: "Test",
-      lastName: "User",
-      businessEmail: "invalid-email",
-      password: "Password123",
-      agreement: true,
-    });
+   it("should return 400 for validation errors (invalid email)", async () => {
+     const req = createMockRequest({
+       firstName: "Test",
+       lastName: "User",
+       businessEmail: "invalid-email",
+       password: "Password123",
+       agreement: true,
+     });
 
-    const response = await POST(req);
+     const response = await POST(req, {});
 
-    expect(response.status).toBe(400);
-    const data = await response.json();
-    expect(data.success).toBe(false);
-    expect(data.message).toBe("Validation failed");
-  });
+     expect(response.status).toBe(400);
+     const data = await response.json();
+     expect(data.success).toBe(false);
+     expect(data.message).toBe("Invalid request body");
+   });
 
-  it("should return 400 for validation errors (missing fields)", async () => {
-    const req = createMockRequest({
-      firstName: "T",
-      businessEmail: "test@example.com",
-      password: "Password123",
-      agreement: true,
-    });
+   it("should return 400 for validation errors (missing fields)", async () => {
+     const req = createMockRequest({
+       firstName: "T",
+       businessEmail: "test@example.com",
+       password: "Password123",
+       agreement: true,
+     });
 
-    const response = await POST(req);
+     const response = await POST(req, {});
 
-    expect(response.status).toBe(400);
-    const data = await response.json();
-    expect(data.success).toBe(false);
-    expect(data.message).toBe("Validation failed");
-  });
+     expect(response.status).toBe(400);
+     const data = await response.json();
+     expect(data.success).toBe(false);
+     expect(data.message).toBe("Invalid request body");
+   });
 
   it("should return 409 when email already exists", async () => {
     vi.mocked(AuthService.register).mockRejectedValue(
@@ -89,7 +90,7 @@ describe("POST /api/v1/auth/register", () => {
       agreement: true,
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(409);
     const data = await response.json();
@@ -108,7 +109,7 @@ describe("POST /api/v1/auth/register", () => {
       agreement: true,
     });
 
-    const response = await POST(req);
+    const response = await POST(req, {});
 
     expect(response.status).toBe(500);
     const data = await response.json();
