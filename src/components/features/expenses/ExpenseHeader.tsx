@@ -21,7 +21,7 @@ export default function ExpenseHeader({
     <div className="w-full bg-white p-5 flex items-start justify-between gap-4">
       <div>
         <Link
-          href="/app/finance"
+          href="/finance"
           className="inline-flex items-center gap-2 text-sm text-[#6b7280] hover:underline"
         >
           <ArrowLeft className="h-4 w-4" />

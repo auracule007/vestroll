@@ -1,4 +1,6 @@
 import { apiClient } from "../api-client";
+import { Contract } from "@/lib/data/contracts";
+import { Invoice } from "@/lib/data/invoices";
 
 export interface PayrollEmployee {
   id: string;
@@ -38,35 +40,6 @@ export interface RunPayrollInput {
   providerId?: "monnify" | "flutterwave";
 }
 
-export class FinanceService {
-  static async getPendingPayroll(): Promise<PayrollItem[]> {
-    return apiClient.get<PayrollItem[]>("/api/v1/finance/payroll");
-  }
-
-  static async submitPayroll(data: RunPayrollInput): Promise<RunPayrollResponse> {
-    return apiClient.post<RunPayrollResponse>("/api/v1/finance/payroll", data);
-import { Contract } from "@/lib/data/contracts";
-import { Invoice } from "@/lib/data/invoices";
-
-export class FinanceService {
-  static async getContracts(): Promise<Contract[]> {
-    const res = await fetch("/api/v1/finance/contracts", {
-      credentials: "include",
-    });
-    if (!res.ok) throw new Error("Failed to fetch contracts");
-    const json = await res.json();
-    return json.data ?? [];
-  }
-
-  static async getInvoices(): Promise<Invoice[]> {
-    const res = await fetch("/api/v1/finance/invoices", {
-      credentials: "include",
-    });
-    if (!res.ok) throw new Error("Failed to fetch invoices");
-    const json = await res.json();
-    return json.data ?? [];
-import { apiClient } from "../api-client";
-
 interface DepositRequest {
   amount: number;
   provider?: "monnify" | "flutterwave";
@@ -85,6 +58,22 @@ interface DepositResponse {
 }
 
 export class FinanceService {
+  static async getPendingPayroll(): Promise<PayrollItem[]> {
+    return apiClient.get<PayrollItem[]>("/api/v1/finance/payroll");
+  }
+
+  static async submitPayroll(data: RunPayrollInput): Promise<RunPayrollResponse> {
+    return apiClient.post<RunPayrollResponse>("/api/v1/finance/payroll", data);
+  }
+
+  static async getContracts(): Promise<Contract[]> {
+    return apiClient.get<Contract[]>("/api/v1/finance/contracts");
+  }
+
+  static async getInvoices(): Promise<Invoice[]> {
+    return apiClient.get<Invoice[]>("/api/v1/finance/invoices");
+  }
+
   static async initializeDeposit(request: DepositRequest): Promise<DepositResponse> {
     return apiClient.post<DepositResponse>("/api/v1/finance/fiat/deposit", request);
   }

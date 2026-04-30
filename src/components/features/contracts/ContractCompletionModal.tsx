@@ -54,7 +54,7 @@ function ContractCompletionModal() {
           </button>
         </div>
       </div>
-      <Link href="/app/contracts">
+      <Link href="/contracts">
         <button className="w-full font-medium text-white rounded-lg bg-primary-500 h-14 cursor-pointer">
           All done
         </button>
