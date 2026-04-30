@@ -71,9 +71,10 @@ const MOCK_FIAT_TXS: FiatTransaction[] = [
   },
 ]; 
 
+import { formatNairaFromKobo } from "@/lib/format-naira";
+
 function formatNgn(kobo: number): string {
-  return 
-    (kobo, { currency: "NGN" });
+  return formatNairaFromKobo(kobo);
 }
 
 function statusBadge(status: FiatTransaction["status"]) {
