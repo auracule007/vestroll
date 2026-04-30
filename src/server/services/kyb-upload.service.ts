@@ -2,6 +2,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 import { AppError } from "../utils/errors";
+import { Logger } from "./logger.service";
 import { KYB_FILE_CONSTRAINTS } from "../validations/kyb.schema";
 
 const S3_CONFIG = {
@@ -43,7 +44,7 @@ export class KybUploadService {
     contentType: string,
   ): Promise<SignedUploadUrl> {
     // Validate content type
-    if (!KYB_FILE_CONSTRAINTS.allowedMimeTypes.includes(contentType as any)) {
+    if (!(KYB_FILE_CONSTRAINTS.allowedMimeTypes as readonly string[]).includes(contentType)) {
       throw new AppError(
         `Invalid content type. Allowed: ${KYB_FILE_CONSTRAINTS.allowedMimeTypes.join(", ")}`,
         400,
@@ -95,7 +96,7 @@ export class KybUploadService {
       });
       await this.getS3Client().send(command);
     } catch (error) {
-      console.error(`Failed to delete S3 object: ${key}`, error);
+      Logger.error(`Failed to delete S3 object: ${key}`, { error: error instanceof Error ? error.message : String(error) });
     }
   }
 }
