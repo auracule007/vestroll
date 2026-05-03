@@ -1,117 +1,156 @@
-# VestRoll: Payroll
+# VestRoll
 
-Stablecoin and fiat Payroll and invoicing platform on Stellar
+<p align="center">
+  <a href="https://github.com/SafeVault/vestroll/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License"></a>
+  <a href="https://stellar.expert/explorer/testnet/"><img src="https://img.shields.io/badge/network-testnet-purple" alt="Testnet"></a>
+  <a href="https://stellar.expert/explorer/public/"><img src="https://img.shields.io/badge/network-mainnet-green" alt="Mainnet"></a>
+</p>
 
----
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-20.x-green?style=for-the-badge&logo=node.js" alt="Node.js 20" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript" alt="TS 5" />
+  <img src="https://img.shields.io/badge/Next.js-15.x-black?style=for-the-badge&logo=next.js" alt="Next.js 15" />
+  <img src="https://img.shields.io/badge/Drizzle-ORM-teal?style=for-the-badge&logo=drizzle" alt="Drizzle" />
+  <img src="https://img.shields.io/badge/Stellar-Wallet-black?style=for-the-badge&logo=stellar" alt="Stellar" />
+</p>
 
-## 🏗️ The 2026 Technology Stack
+**VestRoll** is a professional payroll and invoicing system built on the Stellar network. It enables businesses, contractors, and individuals to manage global payments with automated tax handling using both fiat and stablecoins.
 
-### Core Architecture
+## 🚀 Features
 
-- **Framework**: [Next.js 15.5](https://nextjs.org/) (App Router & Turbopack)
-- **Library**: [React 19](https://react.dev/)
-- **State**: Redux Toolkit (UI) & Zustand (Store)
+- 💰 **Hybrid Payments**: Full support for fiat and stablecoins (USDC) for global settlement.
+- ⚡ **Payroll Management**: Automated disbursement of payments to large teams in seconds.
+- 🤝 **Invoice as a Service**: Specialized infrastructure for generating and tracking invoices on Stellar.
+- 💸 **Tax Handling**: Integrated tax calculations and reporting for every transaction.
+- 🔐 **Multi-Account Support**: Tailored experiences for Business, Contractor, and Individual accounts.
 
-### Identity & Privacy (ZK)
+## 🛠️ Tech Stack
 
-- **Auth**: [@stellar/passkey-kit](https://github.com/stellar/passkey-kit) (FaceID/TouchID Biometric Login)
-- **Privacy**: [Stellar Protocol 25 (X-Ray)](https://stellar.org/blog/developers/protocol-25-x-ray) & `circomlib` for ZK-shielded payroll.
-- **Smart Accounts**: [@stellar/smart-account-kit](https://github.com/stellar/smart-account-kit) for automated contract-wallet deployment.
+- **Framework**: [Next.js 15](https://nextjs.org/) (Frontend & API)
+- **Runtime**: Node.js 20 LTS
+- **Database**: PostgreSQL (via Drizzle ORM)
+- **Blockchain**: Stellar Network (SEP-24, Passkey Kit)
+- **State Management**: Redux Toolkit & Zustand
 
-### Finance & Fiat Bridge
+## 🏁 Quick Start
 
-- **Fiat Providers**: Native integration for **Monnify** and **Flutterwave** (NGN On-ramps).
-- **Stellar Bridge**: [SEP-24](https://stellar.org/developers/stellar-wallet-sdk) via Stellar Wallet SDK for automated NGN-to-USDC settlement.
-- **Gasless UX**: **Launchtube** / Fee-Bumping infrastructure (Zero XLM required for users).
+1. **Clone and Prepare**:
 
----
+   ```bash
+   git clone https://github.com/SafeVault/vestroll.git
+   cd vestroll
+   cp .env.example .env
+   ```
 
-## 📂 Project Structure
+2. **Install Dependencies**:
 
-```text
-vestroll/
-├── src/
-│   ├── api/                # ZK-Circuit logic & Service Orchestration
-│   ├── app/                # Next.js App Router (Invisible Crypto UX)
-│   ├── components/         # Biometric Auth & Shielded UI Components
-│   ├── server/
-│   │   ├── services/       # Monnify, Flutterwave & Blockchain Services
-│   │   └── db/             # Drizzle Schema (Auth, Org, Fiat, ZK)
-│   └── lib/                # Passkey & Smart Account SDK wrappers
-└── brain/                  # Master Roadmaps & Technical Documentation
-```
-
----
-
-## ✨ Key Features
-
-- **Invisible Onboarding**: Users sign up with Email and Biometrics (Passkeys). No seed phrases, no private keys, no 12-word recovery.
-- **Hybrid Recovery**: A "Best of Both Worlds" security model—Biometric speed for daily use, Email recovery for account resets.
-- **ZK-Shielded Payments**: Payroll amounts are hidden from the public ledger using Zero-Knowledge proofs, providing enterprise-grade confidentiality.
-- **Automated Fiat-Stable Bridge**: Deposits in **Naira (NGN)** are automatically reflected as **USDC** in the Smart Wallet, enabling instant global payouts.
-- **Atomic Batching**: Disburse 100+ payroll entries in a single biometric signature using Soroban atomic transactions.
-- **Invisible Gas**: Transaction fees are sponsored (Launchtube) or paid in USDC, ensuring users never need to hold or know about XLM.
-
----
-
-## 🎯 Target Audience & Ecosystem Impact
-
-### Who is this for?
-
-- **Global Enterprises**: Companies with distributed teams needing seamless cross-border payroll.
-- **DAO & Web3 Organizations**: Native crypto organizations requiring fiat and stablecoin payroll solutions.
-- **Freelancers & Contractors**: Individuals seeking transparent, instant, and low-fee payments.
-
-### Contribution to the Stellar Ecosystem
-
-VestRoll plays a pivotal role in the **Stellar ecosystem** by:
-
-1.  **Driving Real-World Utility**: Moving beyond speculation to practical, high-volume stablecoin use cases (Payroll).
-2.  **Highlighting Efficiency**: Showcasing Stellar's speed and low fees for frequent, small-to-large value transactions.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 20.x or higher
-- **pnpm** (preferred)
-- **Stellar CLI** (for local Soroban development)
-
-### Installation
-
-1. Clone the repository and install dependencies:
    ```bash
    pnpm install
    ```
-2. Configure Environment:
-   Add `STELLAR_RPC_URL` and `LAUNCHTUBE_API_KEY` to your `.env.local`.
-3. **Database Setup & Seeding**:
-   To sync the schema and populate the database with realistic test data:
+
+3. **Database Setup**:
+
    ```bash
    pnpm drizzle-kit push
-   pnpm db:seed
    ```
-4. Start development server:
+
+4. **Run in Development**:
    ```bash
    pnpm dev
    ```
 
+## 🏗️ Project Structure
+
+```
+vestroll/
+├── src/
+│   ├── app/                # Next.js App Router (Pages & API)
+│   ├── components/         # UI Components (Shadcn UI)
+│   ├── server/
+│   │   ├── services/       # Business Logic (Payroll, Tax, Stellar)
+│   │   └── db/             # Drizzle Schema & Migrations
+│   └── lib/                # Shared utilities & SDK wrappers
+├── docs/                   # Comprehensive documentation
+├── public/                 # Static assets
+└── scripts/                # Utility scripts for DB and Swagger
+```
+
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`/docs`](./docs/) folder:
+
+### Quick Start
+
+- 📖 **[Main Documentation](./docs/README.md)** - Complete documentation index
+
+### Core Documentation
+
+- 📐 [Architecture Overview](./docs/architecture/overview.md) - System architecture
+- 📋 [Project Overview](./docs/context/project-overview.md) - Vision and goals
+- 👥 [User Personas](./docs/context/user-personas.md) - Account types and use cases
+
+## 🎯 Use Cases
+
+### Business Payroll
+
+Manage organizational payroll with ease:
+
+1. Deposit funds via fiat or stablecoin.
+2. Automate tax deductions based on jurisdiction.
+3. Disburse payments to contractors and employees instantly.
+
+### Contractor Invoicing
+
+Generate professional invoices and get paid:
+
+1. Create invoices as a service on Stellar.
+2. Receive payments in stablecoins for low-fee global settlement.
+3. Track payment status and tax obligations.
+
+### Individual Payments
+
+Simple and secure personal payment management:
+
+1. Manage personal balances in fiat or stablecoins.
+2. Secure onboarding with biometric Passkeys.
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: [/docs](./docs/)
+- **Issues**: [GitHub Issues](https://github.com/SafeVault/vestroll/issues)
+
+## 👥 Maintainers
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="https://github.com/codeze-us.png" alt="codeZe-us" width="150" />
+      <br /><br />
+      <strong>codeZe-us</strong>
+      <br /><br />
+      <a href="https://github.com/codeze-us" target="_blank">GitHub</a>
+    </td>
+  </tr>
+</table>
+
 ---
 
-## 🛡️ Roadmap & Strategy
+## **Thanks to all the contributors who have made this project possible!**
 
-VestRoll development is structured across 4 Strategic Tranches:
-
-1. **Tranche 1**: Foundation & Biometric Onboarding.
-2. **Tranche 2**: Fiat-Stable Bridge (NGN MVP).
-3. **Tranche 3**: Privacy Shield (Shielded Testnet).
-4. **Tranche 4**: Mainnet Launch & UX Audit.
-
+[![Contributors](https://contrib.rocks/image?repo=SafeVault/vestroll)](https://github.com/SafeVault/vestroll/graphs/contributors)
 
 ---
 
-## 📄 License
+<p align="center">
+  <i>🚀 Empowering global payroll with Stellar 🚀</i>
+</p>
 
-Commercial - All rights reserved to SafeVault/VestRoll.
+---
