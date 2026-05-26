@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { TransactionIdempotencyCache } from "./transaction-idempotency";
 
-// Mock the DB module
+
 vi.mock("../db", () => ({
   db: {
     select: vi.fn(),
@@ -30,7 +30,7 @@ const mockResult = {
 describe("TransactionIdempotencyCache (DB backend)", () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    // Default to DB backend
+    
     delete process.env.TRANSACTION_CACHE_BACKEND;
   });
 

@@ -34,26 +34,16 @@ import { Logger } from "./logger.service";
 import { EmailService } from "./email.service";
 import { LoginOTPService } from "./login-otp.service";
 
-/** Max age for a passkey registration challenge (WebAuthn-style short TTL). */
+
 const PASSKEY_REGISTRATION_CHALLENGE_TTL_MS = 5 * 60 * 1000;
 
 function hashPasskeyRegistrationChallenge(challenge: string): string {
   return crypto.createHash("sha256").update(challenge, "utf8").digest("hex");
 }
 
-/**
- * AuthService handles user registration, authentication (password and passkey),
- * session management, and biometric enrollment.
- */
+
 export class AuthService {
-  /**
-   * Registers a new user and creates their organization if applicable.
-   * Generates and stores an email verification OTP.
-   * 
-   * @param data - Registration input including user and company details.
-   * @returns Object containing user ID, email, and status message.
-   * @throws {ConflictError} If the email already exists.
-   */
+  
   static async register(data: RegisterInput) {
     const {
       businessEmail,
@@ -121,7 +111,7 @@ export class AuthService {
 
       Logger.info("Email verification OTP generated", { email: businessEmail });
       
-      // Send the OTP via email
+      
       await EmailService.sendVerificationOTPEmail(user.email, user.firstName, otp);
       
       if (process.env.NODE_ENV !== "production") {
@@ -136,17 +126,7 @@ export class AuthService {
     });
   }
 
-  /**
-   * Authenticates a user using email and password.
-   * Checks rate limits, account lockout status, and verification status.
-   * 
-   * @param data - Login credentials.
-   * @param metadata - Request metadata (IP, User Agent).
-   * @returns Tokens and user profile.
-   * @throws {UnauthorizedError} If credentials are invalid.
-   * @throws {TooManyRequestsError} If rate limited.
-   * @throws {ForbiddenError} If account is locked or unverified.
-   */
+  
   static async login(
     data: LoginInput,
     metadata: { ipAddress?: string; userAgent?: string },
@@ -270,7 +250,7 @@ export class AuthService {
       success: true,
     });
 
-    // Send login OTP via Brevo instead of issuing tokens immediately
+    
     await LoginOTPService.sendLoginOTP(user.id, user.email, user.firstName);
 
     Logger.info("Login OTP sent", { email: user.email });
@@ -281,14 +261,7 @@ export class AuthService {
     };
   }
 
-  /**
-   * Authenticates a user using passkeys (WebAuthn).
-   * 
-   * @param email - User's email address.
-   * @param metadata - Request metadata.
-   * @returns Tokens and user profile.
-   * @throws {UnauthorizedError} If identity is not found.
-   */
+  
   static async passkeyLogin(
     email: string,
     metadata: { ipAddress?: string; userAgent?: string },
@@ -370,17 +343,7 @@ export class AuthService {
     }
   }
 
-  /**
-   * Updates a user's password.
-   * 
-   * @param userId - ID of the user.
-   * @param currentPasswordHash - Existing password hash.
-   * @param currentPassword - Current plain-text password.
-   * @param newPassword - New plain-text password.
-   * @param metadata - Request metadata.
-   * @throws {BadRequestError} If account is OAuth-only or new password is same as current.
-   * @throws {UnauthorizedError} If current password is incorrect.
-   */
+  
   static async changePassword(
     userId: string,
     currentPasswordHash: string | null,
@@ -427,13 +390,7 @@ export class AuthService {
     });
   }
 
-  /**
-   * Issues a fresh registration challenge for the user. Replaces any prior unconsumed challenge.
-   * Call before `navigator.credentials.create()` (or equivalent); TTL is five minutes.
-   * 
-   * @param userId - ID of the user requesting the challenge.
-   * @returns The generated challenge string.
-   */
+  
   static async issuePasskeyRegistrationChallenge(
     userId: string,
   ): Promise<{ challenge: string }> {
@@ -454,13 +411,7 @@ export class AuthService {
     return { challenge };
   }
 
-  /**
-   * Verifies and deletes a passkey registration challenge.
-   * 
-   * @param userId - ID of the user.
-   * @param challenge - The challenge string to consume.
-   * @throws {BadRequestError} If challenge is invalid or expired.
-   */
+  
   static async consumePasskeyRegistrationChallenge(
     userId: string,
     challenge: string,
@@ -494,13 +445,7 @@ export class AuthService {
       .where(eq(passkeyRegistrationChallenges.id, row.id));
   }
 
-  /**
-   * Enrolls a new biometric credential for the user.
-   * 
-   * @param userId - ID of the user.
-   * @param registration - Passkey registration details.
-   * @param metadata - Request metadata.
-   */
+  
   static async enrollBiometrics(
     userId: string,
     registration: PasskeyRegistrationInput,
@@ -511,7 +456,7 @@ export class AuthService {
       registration.challenge,
     );
 
-    // TODO: Implement actual biometric enrollment logic (WebAuthn credential storage)
+    
 
     await AuditLogService.logBiometricEnrollment({
       userId,
@@ -520,12 +465,7 @@ export class AuthService {
     });
   }
 
-  /**
-   * Logs out the user by invalidating the refresh token and session.
-   * 
-   * @param refreshToken - The refresh token to invalidate.
-   * @param metadata - Request metadata.
-   */
+  
   static async logout(
     refreshToken?: string | null,
     metadata?: { ipAddress?: string; userAgent?: string },

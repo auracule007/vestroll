@@ -125,25 +125,25 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState("Company");
   const tabs = ["Company", "Permissions", "Payment Methods", "Notifications"];
 
-  // ── Org profile ─────────────────────────────────────────────────────────────
+  
   const [profile, setProfile] = useState<CompanyProfile | null>(null);
 
   useEffect(() => {
     OrganizationApi.getProfile()
       .then(setProfile)
-      .catch(() => {}); // silently fall back to placeholder UI
+      .catch(() => {}); 
   }, []);
 
-  // ── Logo state ──────────────────────────────────────────────────────────────
+  
   const [logoSrc, setLogoSrc] = useState("/touchpoint360.png");
   const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  // Track the current blob URL so we can revoke it on any path (success/error/unmount)
+  
   const currentBlobUrlRef = React.useRef<string | null>(null);
 
-  // Revoke a blob URL and clear the ref
+  
   const revokeBlobUrl = useCallback(() => {
     if (currentBlobUrlRef.current) {
       URL.revokeObjectURL(currentBlobUrlRef.current);
@@ -151,21 +151,14 @@ export default function Page() {
     }
   }, []);
 
-  /**
-   * 3-step logo upload:
-   *  1. GET /api/v1/organizations/logo-upload-url → { signedUrl, key }
-   *  2. PUT blob → S3 via signedUrl
-   *  3. PATCH /api/v1/organizations/logo { key } → { logoUrl }
-   *
-   * Optimistic update: show the local blob URL immediately while upload runs.
-   */
+  
   const handleLogoSave = useCallback(async (file: File) => {
     setUploadError(null);
 
-    // Revoke any previous blob URL before creating a new one
+    
     revokeBlobUrl();
 
-    // Optimistic UI: swap logo immediately so the user sees their crop right away
+    
     const localUrl = URL.createObjectURL(file);
     currentBlobUrlRef.current = localUrl;
     setLogoSrc(localUrl);
@@ -173,13 +166,13 @@ export default function Page() {
 
     setIsUploadingLogo(true);
     try {
-      // Step 1 — get presigned S3 upload URL via the service
+      
       const { signedUrl, key } = await OrganizationApi.getLogoUploadUrl(
         file.name,
         file.type
       );
 
-      // Step 2 — upload blob directly to S3 (external URL, raw fetch is intentional)
+      
       const s3Res = await fetch(signedUrl, {
         method: "PUT",
         headers: { "Content-Type": file.type },
@@ -187,10 +180,10 @@ export default function Page() {
       });
       if (!s3Res.ok) throw new Error("Failed to upload logo to storage");
 
-      // Step 3 — save the S3 key to the database via the service
+      
       const { logoUrl } = await OrganizationApi.updateLogo(key);
 
-      // Replace optimistic blob URL with the permanent CDN URL
+      
       revokeBlobUrl();
       setLogoSrc(logoUrl);
     } catch (err) {

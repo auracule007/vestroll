@@ -38,7 +38,7 @@ export default function LoginPage({
       await login(data.email, data.password);
       success("Login successful. Please verify your OTP.");
     } catch (err) {
-      // Error is handled by showToast in catch block or via useAuth error state
+      
       showError(err instanceof Error ? err.message : "Login failed");
     }
   };

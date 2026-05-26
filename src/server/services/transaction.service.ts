@@ -123,7 +123,7 @@ export interface TransactionListResult {
   };
 }
 
-/** @deprecated Use PaginatedResponse<Transaction> from @/types/pagination instead */
+
 export type { TransactionListResult as DeprecatedTransactionListResult };
 
 export class TransactionService {

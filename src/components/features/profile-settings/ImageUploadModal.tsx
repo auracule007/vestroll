@@ -36,7 +36,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      // 5MB limit
+      
       showError("File size must be less than 5MB");
       return;
     }
@@ -45,7 +45,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     reader.onload = (e) => {
       setSelectedImage(e.target?.result as string);
       setSelectedFile(file);
-      // Reset editing state
+      
       setZoom(1);
       setRotation(0);
       setPosition({ x: 0, y: 0 });
@@ -83,7 +83,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     }
   };
 
-  // Generate cropped image
+  
   const getCroppedImage = useCallback((): Promise<File> => {
     return new Promise((resolve, reject) => {
       const canvas = canvasRef.current;
@@ -100,22 +100,22 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         return;
       }
 
-      // Set canvas size to 200×200 (1:1 for both square and circle crops)
+      
       const size = 200;
       canvas.width = size;
       canvas.height = size;
 
-      // Clear canvas
+      
       ctx.clearRect(0, 0, size, size);
 
-      // Apply circular clipping path only for profile photos
+      
       if (shape === "circle") {
         ctx.beginPath();
         ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
         ctx.clip();
       }
 
-      // Calculate image positioning and scaling
+      
       const centerX = size / 2;
       const centerY = size / 2;
 
@@ -125,11 +125,11 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       ctx.scale(zoom, zoom);
       ctx.translate(-centerX + position.x, -centerY + position.y);
 
-      // Draw the image
+      
       ctx.drawImage(image, 0, 0, size, size);
       ctx.restore();
 
-      // Convert canvas to blob
+      
       canvas.toBlob(
         (blob) => {
           if (blob) {
@@ -185,7 +185,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     setRotation((prev) => (prev + 90) % 360);
   };
 
-  // Mouse/touch handlers for image dragging
+  
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setLastMousePosition({ x: e.clientX, y: e.clientY });

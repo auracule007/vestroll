@@ -19,7 +19,7 @@ function VerifyOTPContent() {
     try {
       const result = await AuthService.verifyLoginOTP({ email, otp, rememberMe }) as any;
 
-      // Store the access token in localStorage/cookie for subsequent requests
+      
       if (result?.accessToken) {
         localStorage.setItem("access_token", result.accessToken);
       }

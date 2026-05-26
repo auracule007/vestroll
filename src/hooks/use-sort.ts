@@ -22,13 +22,13 @@ export const useSort = <T extends Record<string, unknown>>({
   initialSort,
   itemsPerPage = 10,
 }: UseSortParams<T>) => {
-  // State
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<Record<string, string>>(initialFilters);
   const [sortConfig, setSortConfig] = useState<SortConfig<T> | null>(initialSort || null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter & Search Logic
+  
   const filteredData = useMemo(() => {
     return data.filter((item) => {
       const matchesSearch =
@@ -50,7 +50,7 @@ export const useSort = <T extends Record<string, unknown>>({
     });
   }, [data, searchQuery, searchKeys, filters]);
 
-  // Sorting Logic
+  
   const sortedData = useMemo(() => {
     if (!sortConfig) return filteredData;
 
@@ -64,7 +64,7 @@ export const useSort = <T extends Record<string, unknown>>({
     });
   }, [filteredData, sortConfig]);
 
-  // Pagination Logic
+  
   const totalItems = sortedData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -73,7 +73,7 @@ export const useSort = <T extends Record<string, unknown>>({
     return sortedData.slice(startIndex, startIndex + itemsPerPage);
   }, [sortedData, currentPage, itemsPerPage]);
 
-  // Handlers
+  
   const handleSort = (key: keyof T) => {
     let direction: SortDirection = 'asc';
     if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -105,27 +105,27 @@ export const useSort = <T extends Record<string, unknown>>({
   };
 
   return {
-    // Data
+    
     data: paginatedData,
     sortedData, 
 
-    // Pagination
+    
     currentPage,
     setCurrentPage: handlePageChange,
     totalPages,
     totalItems,
     itemsPerPage,
 
-    // Search
+    
     searchQuery,
     setSearchQuery: handleSearch,
 
-    // Filters
+    
     filters,
     setFilters: handleSetFilters,
     setFilter: handleFilterChange,
 
-    // Sort
+    
     sortConfig,
     handleSort,
   };

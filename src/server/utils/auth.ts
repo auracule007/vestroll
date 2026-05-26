@@ -57,7 +57,7 @@ export class AuthUtils {
     const authHeaderToken = this.extractToken(request);
     const cookieToken = request.cookies.get("access_token")?.value;
     
-    // Defensive check: sometimes request.cookies is not fully populated in some environments
+    
     let fallbackCookieToken = null;
     if (!cookieToken) {
       const cookieHeader = request.headers.get("cookie");

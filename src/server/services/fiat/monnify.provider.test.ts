@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { MonnifyProvider } from "./monnify.provider";
 
-// Mock global fetch
+
 const fetchMock = vi.fn();
 vi.stubGlobal("fetch", fetchMock);
 
@@ -35,7 +35,7 @@ describe("MonnifyProvider", () => {
         }),
       });
 
-      // Trigger auth by calling disburse (which authenticates first)
+      
       fetchMock.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -60,7 +60,7 @@ describe("MonnifyProvider", () => {
         currency: "NGN",
       });
 
-      // First call should be auth
+      
       const authCall = fetchMock.mock.calls[0];
       expect(authCall[0]).toBe(
         "https://sandbox.monnify.com/api/v1/auth/login"
@@ -75,7 +75,7 @@ describe("MonnifyProvider", () => {
     });
 
     it("reuses a cached token if it has not expired", async () => {
-      // First call: auth + disburse
+      
       fetchMock.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -107,7 +107,7 @@ describe("MonnifyProvider", () => {
         currency: "NGN",
       });
 
-      // Second call: should reuse token (no new auth call)
+      
       fetchMock.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -132,7 +132,7 @@ describe("MonnifyProvider", () => {
         currency: "NGN",
       });
 
-      // auth was called only once (first fetch call)
+      
       const authCalls = fetchMock.mock.calls.filter((args: unknown[]) =>
         (args[0] as string).includes("/auth/login"),
       );
@@ -359,7 +359,7 @@ describe("MonnifyProvider", () => {
         reference: "va-ref-001",
       });
 
-      // Verify request body sent to Monnify
+      
       const vaCall = fetchMock.mock.calls[1];
       expect(vaCall[0]).toBe(
         "https://sandbox.monnify.com/api/v1/bank-transfer/reserved-accounts"

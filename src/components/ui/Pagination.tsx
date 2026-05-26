@@ -35,17 +35,17 @@ const Pagination: React.FC<PaginationProps> = ({
     const maxVisiblePages = 5;
 
     if (totalPages <= maxVisiblePages) {
-      // Show all pages if total pages is less than or equal to max visible
+      
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Show pages with ellipsis
+      
       if (currentPage <= 3) {
-        // Show first 5 pages with ellipsis at the end
+        
         pages.push(1, 2, 3, 4, 5);
       } else if (currentPage >= totalPages - 2) {
-        // Show last 5 pages with ellipsis at the beginning
+        
         pages.push(
           totalPages - 4,
           totalPages - 3,
@@ -54,7 +54,7 @@ const Pagination: React.FC<PaginationProps> = ({
           totalPages,
         );
       } else {
-        // Show current page and surrounding pages
+        
         pages.push(
           currentPage - 2,
           currentPage - 1,

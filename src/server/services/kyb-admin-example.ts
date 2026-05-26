@@ -25,9 +25,7 @@ export class KybAdminService {
     };
   }
 
-  /**
-   * Example: Approve a KYB verification
-   */
+  
   static async approveVerification(
     verificationId: string,
     reviewedBy: string

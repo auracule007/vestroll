@@ -25,10 +25,10 @@ function TeamMgtExpense() {
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-    // Lift data to state for updates
+    
     const [expenses, setExpenses] = useState(initialExpenses);
 
-    // use-sort hook
+    
     const {
         data: paginatedExpenses,
         currentPage,
@@ -56,11 +56,11 @@ function TeamMgtExpense() {
     const handleApprove = () => {
         if (!selectedExpense) return;
 
-        // Update the selected item
+        
         const updatedExpense = { ...selectedExpense, status: "Approved" as const };
         setSelectedExpense(updatedExpense);
 
-        // Update in the list
+        
         setExpenses(prev =>
             prev.map(item => item.id === selectedExpense.id ? updatedExpense : item)
         );
@@ -69,11 +69,11 @@ function TeamMgtExpense() {
     const handleReject = (status: string, reason?: string) => {
         if (!selectedExpense) return;
 
-        // Update the selected item
+        
         const updatedExpense = { ...selectedExpense, status: "Rejected" as const };
         setSelectedExpense(updatedExpense);
 
-        // Update in the list
+        
         setExpenses(prev =>
             prev.map(item => item.id === selectedExpense.id ? updatedExpense : item)
         );

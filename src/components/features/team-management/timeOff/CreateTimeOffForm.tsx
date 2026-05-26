@@ -77,7 +77,7 @@ const formatDate = (dateString: string): string => {
     year: "numeric",
   };
 
-  // To handle timezone issues and get the correct date
+  
   const utcDate = new Date(
     date.getUTCFullYear(),
     date.getUTCMonth(),
@@ -90,7 +90,7 @@ const formatDate = (dateString: string): string => {
   );
   const year = utcDate.getFullYear();
 
-  // Add ordinal suffix (st, nd, rd, th)
+  
   if (day.endsWith("1") && day !== "11") {
     day += "st";
   } else if (day.endsWith("2") && day !== "12") {
@@ -246,7 +246,7 @@ const FileUpload = ({
       </label>
 
       {file ? (
-        // UI to show when a file is selected
+        
         <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-10 h-10 bg-white border border-purple-200 rounded-full flex items-center justify-center flex-shrink-0">
@@ -270,7 +270,7 @@ const FileUpload = ({
           </button>
         </div>
       ) : (
-        // The dropzone UI to show when no file is selected
+        
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -355,7 +355,7 @@ export const CreateTimeOffForm = ({ employees }: { employees: Employee[] }) => {
   };
 
   const handleSubmit = async () => {
-    // Basic client-side validation
+    
     if (!formData.startDate || !formData.endDate) {
       setSubmitStatus("error");
       setSubmitMessage("Please select both a start date and an end date.");
@@ -373,7 +373,7 @@ export const CreateTimeOffForm = ({ employees }: { employees: Employee[] }) => {
     setSubmitMessage("");
 
     try {
-      // Map the UI's timeOffType to the API's leaveType enum
+      
       const leaveType = formData.timeOffType === "paid" ? "vacation" : "other";
 
       await TeamService.submitTimeOff({
@@ -388,7 +388,7 @@ export const CreateTimeOffForm = ({ employees }: { employees: Employee[] }) => {
       setSubmitMessage("Your time-off request has been submitted and is pending approval.");
       success("Time off request created successfully!");
 
-      // Reset form
+      
       setFormData({
         employee: null,
         timeOffType: "paid",

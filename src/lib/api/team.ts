@@ -41,22 +41,22 @@ export class TeamService {
     return apiClient.get("/api/v1/team/members");
   }
 
-  /** Validate an invitation token and return its details. */
+  
   static async validateInvitation(token: string) {
     return apiClient.get(`/api/v1/invitations/validate?token=${encodeURIComponent(token)}`);
   }
 
-  /** Accept an invitation and create a new user account. */
+  
   static async acceptInvitation(payload: AcceptInvitationPayload) {
     return apiClient.post("/api/v1/invitations/accept", payload);
   }
 
-  /** Decline an invitation by token. */
+  
   static async declineInvitation(token: string) {
     return apiClient.post("/api/v1/invitations/decline", { token });
   }
 
-  /** Submit a time-off request on behalf of an employee (or the current user). */
+  
   static async submitTimeOff(payload: TimeOffPayload) {
     return apiClient.post("/api/v1/team/time-off", payload);
   }

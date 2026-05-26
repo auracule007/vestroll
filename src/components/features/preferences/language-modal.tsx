@@ -46,7 +46,7 @@ export function LanguageModal({
     language.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Handle opening animation
+  
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
@@ -78,7 +78,7 @@ export function LanguageModal({
     handleClose();
   };
 
-  // Handle escape key
+  
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {

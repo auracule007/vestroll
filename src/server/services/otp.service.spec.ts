@@ -29,7 +29,7 @@ describe("OTPService", () => {
       for (let i = 0; i < 20; i++) {
         otps.add(OTPService.generateOTP());
       }
-      // With 20 random 6-digit OTPs, we should see at least 2 unique values
+      
       expect(otps.size).toBeGreaterThan(1);
     });
   });

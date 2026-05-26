@@ -1,4 +1,4 @@
-// app/settings/page.tsx (or wherever your main file is)
+
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -129,7 +129,7 @@ export default function Page() {
   );
 }
 
-// Settings Content Component
+
 function Settings() {
   const router = useRouter();
   const [profImage, setProfImage] = useState<string | null>(null);
@@ -141,7 +141,7 @@ function Settings() {
     const imageUrl = URL.createObjectURL(file);
     setProfImage(imageUrl);
 
-    // Simulate API call
+    
     console.log("Uploading image:", file.name);
   };
 

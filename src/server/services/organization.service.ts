@@ -24,9 +24,7 @@ export interface Organization {
 }
 
 export class OrganizationService {
-  /**
-   * Internal helper: get organization by ID (optionally include deleted)
-   */
+  
   private static async findById(
     organizationId: string,
     includeDeleted = false
@@ -47,9 +45,7 @@ export class OrganizationService {
     return organization || null;
   }
 
-  /**
-   * Soft delete an organization
-   */
+  
   static async softDelete(organizationId: string): Promise<void> {
     const organization = await this.findById(organizationId, true);
 
@@ -58,7 +54,7 @@ export class OrganizationService {
     }
 
     if (organization.deletedAt) {
-      // Already deleted → no-op
+      
       return;
     }
 
@@ -76,9 +72,7 @@ export class OrganizationService {
       );
   }
 
-  /**
-   * Restore a soft-deleted organization
-   */
+  
   static async restore(organizationId: string): Promise<void> {
     const organization = await this.findById(organizationId, true);
 
@@ -87,7 +81,7 @@ export class OrganizationService {
     }
 
     if (!organization.deletedAt) {
-      // Not deleted → no-op
+      
       return;
     }
 
@@ -105,9 +99,7 @@ export class OrganizationService {
       );
   }
 
-  /**
-   * Get all active (non-deleted) organizations
-   */
+  
   static async getActiveOrganizations(): Promise<Organization[]> {
     return db
       .select()
@@ -115,35 +107,26 @@ export class OrganizationService {
       .where(isNull(organizations.deletedAt));
   }
 
-  /**
-   * Get a single organization by ID (only if not deleted)
-   */
+  
   static async getById(organizationId: string): Promise<Organization | null> {
     return this.findById(organizationId, false);
   }
 
-  /**
-   * Get organization by ID regardless of deleted status (admin use)
-   */
+  
   static async getByIdIncludingDeleted(
     organizationId: string
   ): Promise<Organization | null> {
     return this.findById(organizationId, true);
   }
 
-  /**
-   * Get all organizations including deleted ones (admin use)
-   */
+  
   static async getAllOrganizations(): Promise<Organization[]> {
     return db.select().from(organizations);
   }
 
-  /**
-   * Permanently delete an organization (DANGEROUS)
-   * Intended for admin/internal use only
-   */
+  
   static async hardDelete(organizationId: string): Promise<void> {
-    // Optional safety guard (recommended)
+    
     if (process.env.NODE_ENV === "production") {
       throw new Error("Hard delete is not allowed in production");
     }

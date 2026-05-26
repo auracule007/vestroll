@@ -101,10 +101,10 @@ const normalizeTransaction = (
 });
 
 export default function FinancePage() {
-  // State for balance
+  
   const [ngnBalance, setNgnBalance] = useState<string>("₦0.00");
 
-  // State for transactions
+  
   const [transactions, setTransactions] = useState<DisplayTransaction[]>([]);
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
   const [transactionsError, setTransactionsError] = useState<string | null>(null);
@@ -113,12 +113,12 @@ export default function FinancePage() {
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  // State for UI
+  
   const [search, setSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
 
-  // Fetch organization fiat balance
+  
   useEffect(() => {
     const fetchBalance = async () => {
       try {
@@ -131,7 +131,7 @@ export default function FinancePage() {
     fetchBalance();
   }, []);
 
-  // Fetch transactions
+  
   useEffect(() => {
     const controller = new AbortController();
 

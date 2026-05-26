@@ -4,7 +4,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 import "swagger-ui-react/swagger-ui.css";
 
-// Define props for SwaggerUI
+
 interface SwaggerUIProps {
   url: string;
 }

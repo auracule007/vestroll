@@ -33,7 +33,7 @@ export default function BillingAddressPage() {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Pre-fill from API
+  
   useEffect(() => {
     OrganizationApi.getProfile()
       .then((profile) => {

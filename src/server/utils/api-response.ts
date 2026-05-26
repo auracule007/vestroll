@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildProblemDetails, type ProblemDetails } from "./problem-details";
 
-// ─── Success response shape ───────────────────────────────────────────────────
+
 
 type SuccessResponse<T> = {
   success: true;
@@ -9,17 +9,11 @@ type SuccessResponse<T> = {
   data: T;
 };
 
-// ─── ApiResponse class ────────────────────────────────────────────────────────
 
-/**
- * Centralised HTTP response factory.
- *
- * - `success` returns a standard data envelope.
- * - `error`   returns an RFC 7807 Problem Details body
- *              (application/problem+json) for every 4xx / 5xx.
- */
+
+
 export class ApiResponse {
-  // ── Success ──────────────────────────────────────────────────────────────
+  
 
   static success<T>(
     data: T,
@@ -40,18 +34,9 @@ export class ApiResponse {
     );
   }
 
-  // ── Error (RFC 7807) ─────────────────────────────────────────────────────
+  
 
-  /**
-   * Builds an RFC 7807 Problem Details response.
-   *
-   * @param detail   Human-readable explanation of this specific occurrence.
-   * @param status   HTTP status code (default 500).
-   * @param errors   Optional field-level error map (e.g. from Zod).
-   * @param req      The originating request – used to populate `instance`.
-   *                 Falls back to `"unknown"` when omitted.
-   * @param headers  Optional additional headers.
-   */
+  
   static error(
     detail: string = "Internal Server Error",
     status: number = 500,
@@ -77,11 +62,7 @@ export class ApiResponse {
     });
   }
 
-  /**
-   * Convenience overload accepting a pre-built {@link ProblemDetails} object
-   * so callers that have already constructed the full problem can pass it
-   * through directly without re-specifying every property.
-   */
+  
   static problemDetails(
     problem: ProblemDetails,
     headers?: HeadersInit

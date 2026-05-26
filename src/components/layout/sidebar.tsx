@@ -56,7 +56,7 @@ export default function Sidebar({
       router.push("/login");
     } catch (error) {
       console.error("Logout failed:", error);
-      // Fallback redirect even if API fails
+      
       router.push("/login");
     }
   };
@@ -170,7 +170,7 @@ export default function Sidebar({
     </div>
   );
 
-  // Desktop sidebar
+  
   return (
     <>
       <aside className="hidden lg:flex lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 lg:w-72 lg:flex-col lg:border-r lg:border-[#e5e7eb] lg:bg-white lg:overflow-y-auto dark:lg:bg-gray-900 dark:lg:border-gray-800">

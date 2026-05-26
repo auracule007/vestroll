@@ -49,13 +49,13 @@ export default function CompleteKYBPage() {
 
   const uploadFile = async (file: File, field: keyof KybFormData) => {
     try {
-      // Step 1 — get presigned S3 upload URL via the service
+      
       const { signedUrl, key } = await KybService.getUploadUrl(
         file.name,
         file.type
       );
 
-      // Step 2 — upload the raw file directly to S3 (external URL, raw fetch is correct here)
+      
       const uploadRes = await fetch(signedUrl, {
         method: "PUT",
         body: file,

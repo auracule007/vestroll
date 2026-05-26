@@ -52,7 +52,7 @@ const TeamMgtEmployees: React.FC<TeamMgtEmployeesProps> = ({ employees }) => {
   };
 
   const handleAddEmployeeSuccess = async (data: WizardFormData) => {
-    // Mocking an API call
+    
     console.log("Adding new employee with wizard data:", data);
     return new Promise<void>((resolve) => {
       setTimeout(() => {
@@ -80,7 +80,7 @@ const TeamMgtEmployees: React.FC<TeamMgtEmployeesProps> = ({ employees }) => {
     },
   ];
 
-  // Show empty state if no employees passed (handled by parent usually, but safety check)
+  
   if (employees.length === 0) {
     return (
       <div className="bg-white rounded-lg border border-gray-200">

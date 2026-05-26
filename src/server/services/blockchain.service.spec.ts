@@ -397,7 +397,7 @@ describe("BlockchainService", () => {
     });
 
     it("should accept memo exactly 28 bytes", async () => {
-      // 28 ASCII characters = 28 bytes
+      
       const memo28Bytes = "ABCDEFGHIJKLMNOPQRSTUVWXYZAB";
       expect(Buffer.byteLength(memo28Bytes, "utf8")).toBe(28);
 
@@ -412,7 +412,7 @@ describe("BlockchainService", () => {
     });
 
     it("should throw error for memo 29 bytes", async () => {
-      // 29 ASCII characters = 29 bytes
+      
       const memo29Bytes = "ABCDEFGHIJKLMNOPQRSTUVWXYZABC";
       expect(Buffer.byteLength(memo29Bytes, "utf8")).toBe(29);
 
@@ -429,7 +429,7 @@ describe("BlockchainService", () => {
     });
 
     it("should handle multi-byte characters correctly", async () => {
-      // "😀" is 4 bytes in UTF-8, so 7 emojis = 28 bytes
+      
       const multiByteMemo = "😀😀😀😀😀😀😀";
       expect(Buffer.byteLength(multiByteMemo, "utf8")).toBe(28);
 
@@ -444,7 +444,7 @@ describe("BlockchainService", () => {
     });
 
     it("should throw error for multi-byte memo exceeding 28 bytes", async () => {
-      // 8 emojis = 32 bytes, which exceeds the 28 byte limit
+      
       const multiByteMemoTooLong = "😀😀😀😀😀😀😀😀";
       expect(Buffer.byteLength(multiByteMemoTooLong, "utf8")).toBe(32);
 

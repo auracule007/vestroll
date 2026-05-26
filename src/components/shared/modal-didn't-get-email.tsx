@@ -23,7 +23,7 @@ export default function ModalDdntGetEmail({
 }: ModalDdntGetEmailProps) {
   const [isOpen, setOpen] = useState(open);
 
-  // Sync internal state with prop changes
+  
   useEffect(() => {
     setOpen(open);
   }, [open]);

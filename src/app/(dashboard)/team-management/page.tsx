@@ -35,7 +35,7 @@ const TeamManagementDashboard = () => {
     setIsInviting(true);
     try {
       const response: any = await TeamService.listInvitations();
-      // Handle both { data: [...] } and directly [...]
+      
       const data = response.data || response;
       setInvitations(Array.isArray(data) ? data : (data.data || []));
     } catch (err: any) {

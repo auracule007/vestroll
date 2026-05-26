@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
       user.organizationId ?? "",
     );
 
-    // Convert bigint to number for JSON serialization
+    
     return ApiResponse.success(
       { balance: Number(balance) },
       "Balance retrieved successfully",

@@ -167,7 +167,7 @@ const BusinessRegistrationForm: React.FC = () => {
     "Other",
   ];
 
-  // Calculate progress based on form completion
+  
   useEffect(() => {
     const storedData = localStorage.getItem("registrationData");
     if (storedData) {
@@ -234,13 +234,13 @@ const BusinessRegistrationForm: React.FC = () => {
 
   const uploadFile = async (file: File, field: keyof FormData) => {
     try {
-      // Step 1 — get presigned S3 upload URL via the service
+      
       const { signedUrl, key } = await KybService.getUploadUrl(
         file.name,
         file.type
       );
 
-      // Step 2 — upload the raw file directly to S3 (external URL, raw fetch is correct here)
+      
       const uploadRes = await fetch(signedUrl, {
         method: "PUT",
         body: file,
@@ -249,7 +249,7 @@ const BusinessRegistrationForm: React.FC = () => {
 
       if (!uploadRes.ok) throw new Error("Failed to upload to S3");
 
-      // Step 3 — update state
+      
       setFormData((prev) => ({ ...prev, [field]: key }));
       if (errors[field]) {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -286,10 +286,10 @@ const BusinessRegistrationForm: React.FC = () => {
         businessDescription: formData.businessDescription,
       };
 
-      // Submit complete registration data using AuthService
+      
       await AuthService.completeRegistration(completeData);
 
-      // Submit KYB data via KybService
+      
       await KybService.submit({
         registrationType: formData.registrationType,
         registrationNo: formData.registrationNo,
@@ -311,7 +311,7 @@ const BusinessRegistrationForm: React.FC = () => {
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    // Clear error when user starts typing
+    
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }

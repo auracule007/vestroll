@@ -2,7 +2,7 @@ import { apiClient } from "../api-client";
 import { Contract } from "@/lib/data/contracts";
 import { Invoice } from "@/lib/data/invoices";
 
-// ─── Wallet ──────────────────────────────────────────────────────────────────
+
 
 export interface WalletFundingDetails {
   walletId: string | null;
@@ -12,13 +12,13 @@ export interface WalletFundingDetails {
   hasVirtualAccount: boolean;
 }
 
-// ─── Balance ─────────────────────────────────────────────────────────────────
+
 
 export interface FiatBalanceResponse {
-  balance: number; // in kobo
+  balance: number; 
 }
 
-// ─── Transactions ─────────────────────────────────────────────────────────────
+
 
 export interface TransactionMeta {
   page: number;
@@ -118,25 +118,22 @@ export class FinanceService {
     return apiClient.post<DepositResponse>("/api/v1/finance/fiat/deposit", request);
   }
 
-  /** Fetch the organization's NGN virtual-account funding details. */
+  
   static async getWallet(): Promise<WalletFundingDetails> {
     return apiClient.get<WalletFundingDetails>("/api/v1/finance/wallet");
   }
 
-  /**
-   * Request / refresh the organization's dedicated virtual account.
-   * Used by AddFundsModal when no virtual account exists yet.
-   */
+  
   static async refreshWallet(): Promise<WalletFundingDetails> {
     return apiClient.post<WalletFundingDetails>("/api/v1/finance/wallet");
   }
 
-  /** Fetch the raw NGN fiat balance (returns amount in kobo). */
+  
   static async getBalance(): Promise<FiatBalanceResponse> {
     return apiClient.get<FiatBalanceResponse>("/api/v1/finance/balance");
   }
 
-  /** Fetch a paginated list of transactions. */
+  
   static async getTransactions(page = 1, limit = 10): Promise<TransactionsPage> {
     return apiClient.get<TransactionsPage>(
       `/api/v1/finance/transactions?page=${page}&limit=${limit}`

@@ -21,7 +21,7 @@ export default function CidPage({ params }: Props) {
 
     const title = new URL(window.location.href).searchParams.get('title');
 
-    // Tab configuration with conditional logic
+    
     const tabs = [
       { id: 1, label: 'Details' },
       {

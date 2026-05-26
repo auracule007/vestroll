@@ -48,7 +48,7 @@ export default function EmailVerificationPage() {
       }
     }
 
-    // Handle delete
+    
     if (e.key === "Delete" && verificationCode[index] && index < 5) {
       const newCode = [...verificationCode];
       newCode[index] = "";
@@ -70,7 +70,7 @@ export default function EmailVerificationPage() {
       }
       setVerificationCode(newCode);
 
-      // Focus the next empty input or the last one
+      
       const nextIndex = Math.min(pastedData.length, 5);
       const nextInput = document.getElementById(`otp-${nextIndex}`);
       if (nextInput) {

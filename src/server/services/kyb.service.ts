@@ -7,7 +7,7 @@ import { KybUploadService } from "./kyb-upload.service";
 
 export type KybStatus = (typeof kybStatusEnum.enumValues)[number];
 
-// Re-export from shared types for backward compatibility
+
 export { KYB_REJECTION_CODES, type KybRejectionCode } from "@/types/kyb";
 
 export class KybService {
@@ -110,12 +110,7 @@ export class KybService {
     });
   }
 
-  /**
-   * Approve a pending KYB verification.
-   *
-   * The status update and audit log insert execute within the same DB transaction,
-   * guaranteeing atomicity — if either write fails, both are rolled back.
-   */
+  
   static async approve(data: { verificationId: string; adminUserId: string }) {
     return await db.transaction(async (tx) => {
       const [existing] = await tx
@@ -128,7 +123,7 @@ export class KybService {
         throw new NotFoundError("KYB verification record not found");
       }
 
-      // Only pending verifications can be approved
+      
       if (existing.status !== "pending") {
         throw new ConflictError(
           `Cannot approve a verification that is already '${existing.status}'`,
@@ -137,9 +132,9 @@ export class KybService {
 
       const previousStatus = existing.status;
 
-      // Include status = 'pending' in the WHERE clause to make the transition
-      // race-safe: if another transaction changed the status between our SELECT
-      // and this UPDATE, 0 rows are affected and we detect it below.
+      
+      
+      
       const [updated] = await tx
         .update(kybVerifications)
         .set({
@@ -154,7 +149,7 @@ export class KybService {
         )
         .returning();
 
-      // Guard against concurrent modification between SELECT and UPDATE
+      
       if (!updated) {
         throw new ConflictError(
           "KYB verification was modified concurrently; please retry",
@@ -183,12 +178,7 @@ export class KybService {
     });
   }
 
-  /**
-   * Reject a pending KYB verification.
-   *
-   * The status update and audit log insert execute within the same DB transaction,
-   * guaranteeing atomicity — if either write fails, both are rolled back.
-   */
+  
   static async reject(data: {
     verificationId: string;
     adminUserId: string;
@@ -206,7 +196,7 @@ export class KybService {
         throw new NotFoundError("KYB verification record not found");
       }
 
-      // Only pending verifications can be rejected
+      
       if (existing.status !== "pending") {
         throw new ConflictError(
           `Cannot reject a verification that is already '${existing.status}'`,
@@ -215,9 +205,9 @@ export class KybService {
 
       const previousStatus = existing.status;
 
-      // Include status = 'pending' in the WHERE clause to make the transition
-      // race-safe: if another transaction changed the status between our SELECT
-      // and this UPDATE, 0 rows are affected and we detect it below.
+      
+      
+      
       const [updated] = await tx
         .update(kybVerifications)
         .set({
@@ -230,7 +220,7 @@ export class KybService {
         .where(eq(kybVerifications.id, data.verificationId))
         .returning();
 
-      // Guard against concurrent modification between SELECT and UPDATE
+      
       if (!updated) {
         throw new ConflictError(
           "KYB verification was modified concurrently; please retry",

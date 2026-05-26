@@ -6,18 +6,9 @@ export interface JWTPayload extends jose.JWTPayload {
   email: string;
 }
 
-/**
- * JWTService handles the generation and verification of Access and Refresh tokens
- * using the HS256 algorithm. It uses the `jose` library for edge-compatibility.
- */
+
 export class JWTService {
-  /**
-   * Normalizes expiration strings. If a value is provided in milliseconds (e.g., "100ms"),
-   * it converts it to a Unix timestamp in seconds for compatible JWT expiration.
-   * 
-   * @param expiration - Expiration string (e.g., "15m", "7d", "100ms").
-   * @returns Normalized expiration as a string or absolute Unix timestamp.
-   */
+  
   private static normalizeExpiration(expiration: string): string | number {
     const msMatch = expiration.match(/^(\d+)ms$/);
     if (!msMatch) {
@@ -43,13 +34,7 @@ export class JWTService {
     return process.env.JWT_REFRESH_EXPIRATION || "7d";
   }
 
-  /**
-   * Generates a signed Access Token.
-   * 
-   * @param payload - User data to include in the token.
-   * @returns A signed JWT string.
-   * @throws {Error} If JWT_ACCESS_SECRET is not configured.
-   */
+  
   static async generateAccessToken(payload: JWTPayload): Promise<string> {
 
     return await new jose.SignJWT(payload)
@@ -59,13 +44,7 @@ export class JWTService {
       .sign(this.ACCESS_SECRET);
   }
 
-  /**
-   * Generates a signed Refresh Token.
-   * 
-   * @param payload - User data to include in the token.
-   * @returns A signed JWT string.
-   * @throws {Error} If JWT_REFRESH_SECRET is not configured.
-   */
+  
   static async generateRefreshToken(payload: JWTPayload): Promise<string> {
 
     return await new jose.SignJWT(payload)
@@ -75,14 +54,7 @@ export class JWTService {
       .sign(this.REFRESH_SECRET);
   }
 
-  /**
-   * Verifies an Access Token and returns its payload.
-   * 
-   * @param token - The JWT string to verify.
-   * @returns The decoded payload.
-   * @throws {TokenExpiredError} If the token has expired.
-   * @throws {InvalidTokenError} If the token is invalid.
-   */
+  
   static async verifyAccessToken(token: string): Promise<JWTPayload> {
 
     try {
@@ -96,14 +68,7 @@ export class JWTService {
     }
   }
 
-  /**
-   * Verifies a Refresh Token and returns its payload.
-   * 
-   * @param token - The JWT string to verify.
-   * @returns The decoded payload.
-   * @throws {TokenExpiredError} If the token has expired.
-   * @throws {InvalidTokenError} If the token is invalid.
-   */
+  
   static async verifyRefreshToken(token: string): Promise<JWTPayload> {
 
     try {

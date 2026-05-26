@@ -118,7 +118,7 @@ export function AccountForm({ employeeId, initialData, onSubmit, onCancel }: Acc
   const selectedCountry = watch("bankCountry");
   const selectedCountryInfo = countryOptions.find(c => c.value === selectedCountry);
 
-  // Auto-validate when required fields change
+  
   useEffect(() => {
     const requiredField = selectedCountryInfo?.requires;
     const fieldValue = watch(requiredField as any);

@@ -14,7 +14,7 @@ interface TableProps<T = any> {
   setSearch: (value: string) => void;
   showModal: () => void;
 
-  // Table configuration
+  
   selectedTab?: string;
   searchPlaceholder?: string;
   showCheckbox?: boolean;
@@ -22,7 +22,7 @@ interface TableProps<T = any> {
   showSearch?: boolean;
   seeAllHref?: string;
 
-  // Pagination
+  
   showPagination?: boolean;
   itemsPerPage?: number;
   showResultsPerPage?: boolean;
@@ -33,22 +33,22 @@ interface TableProps<T = any> {
   onPageChange?: (page: number) => void;
   onItemsPerPageChange?: (itemsPerPage: number) => void;
 
-  // Selection functionality
+  
   selectedItems?: string[];
   onSelectItem?: (id: string, checked: boolean) => void;
   onSelectAll?: (checked: boolean) => void;
 
-  // Interaction
+  
   onRowClick?: (item: T) => void;
   renderCell: (item: T, column: TableColumn) => React.ReactNode;
   renderMobileCell: (item: T) => React.ReactNode;
 
-  // Empty state customization
+  
   emptyTitle?: string;
   emptyDescription?: string;
   getItemId?: (item: T) => string;
 
-  // Filter header props
+  
   SearchIcon?: React.ComponentType;
   FilterIcon?: React.ComponentType;
 
@@ -101,7 +101,7 @@ const Table = <T extends Record<string, any>>({
     controlledTotalPages ?? Math.ceil(data.length / itemsPerPage);
   const activeTotalItems = totalItems ?? data.length;
 
-  // Calculate pagination values
+  
   const handleItemsPerPageChange = (newItemsPerPage: number) => {
     setItemsPerPage(newItemsPerPage);
     setCurrentPage(1);
@@ -139,14 +139,14 @@ const Table = <T extends Record<string, any>>({
       );
 
       if (checked) {
-        // Add current page items to selection
+        
         currentPageIds.forEach((id) => {
           if (!selectedItems.includes(id)) {
             onSelectItem?.(id, true);
           }
         });
       } else {
-        // Remove current page items from selection
+        
         currentPageIds.forEach((id) => {
           if (selectedItems.includes(id)) {
             onSelectItem?.(id, false);
@@ -154,7 +154,7 @@ const Table = <T extends Record<string, any>>({
         });
       }
     } else {
-      // For non-paginated tables, select all items
+      
       onSelectAll?.(checked);
     }
   };

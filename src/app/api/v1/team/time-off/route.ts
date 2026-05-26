@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
     try {
         const { userId } = await AuthUtils.authenticateRequest(req);
 
-        // Parse & validate body
+        
         let body: unknown;
         try {
             body = await req.json();
@@ -116,8 +116,8 @@ export async function POST(req: NextRequest) {
 
         const { startDate, endDate, leaveType, reason, employeeId } = parsed.data;
 
-        // Map leaveType → DB's paid/unpaid enum
-        // "vacation" = planned annual leave → paid; all others default to unpaid
+        
+        
         const type: "paid" | "unpaid" = leaveType === "vacation" ? "paid" : "unpaid";
 
         const result = await TimeOffService.createTimeOffRequest({

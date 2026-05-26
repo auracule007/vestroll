@@ -102,7 +102,7 @@ export default function EmployeesPage() {
     fetchEmployees();
   }, [fetchEmployees]);
 
-  // Reset to page 1 when search/filters change
+  
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, filters]);

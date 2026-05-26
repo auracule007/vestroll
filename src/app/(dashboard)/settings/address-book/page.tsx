@@ -18,7 +18,7 @@ export default function AddressBook() {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [addressToDelete, setAddressToDelete] = useState<string | null>(null);
 
-  // Generate random mock data
+  
   const generateMockAddresses = (): CryptoAddress[] => {
     const cryptoTypes = [
       { type: "BTC", name: "Bitcoin" },
@@ -46,7 +46,7 @@ export default function AddressBook() {
     });
   };
 
-  // Generate realistic wallet addresses based on crypto type
+  
   const generateWalletAddress = (cryptoType: string): string => {
     const prefixes: { [key: string]: string } = {
       BTC: "1",
@@ -63,7 +63,7 @@ export default function AddressBook() {
     const chars = "0123456789abcdefABCDEF";
     let address = prefix;
 
-    // Generate random characters after prefix
+    
     for (let i = 0; i < (cryptoType === "BTC" ? 33 : 39); i++) {
       address += chars.charAt(Math.floor(Math.random() * chars.length));
     }
@@ -71,7 +71,7 @@ export default function AddressBook() {
     return address;
   };
 
-  // Load mock addresses on component mount
+  
   useEffect(() => {
     const mockAddresses = generateMockAddresses();
     setAddresses(mockAddresses);
@@ -94,10 +94,10 @@ export default function AddressBook() {
     setIsDeleting(true);
 
     try {
-      // Simulate API call
+      
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Delete address from localStorage
+      
       const updatedAddresses = addresses.filter(
         (address) => address.id !== addressToDelete
       );
@@ -106,7 +106,7 @@ export default function AddressBook() {
 
       console.log("Address deleted:", addressToDelete);
 
-      // Close modal
+      
       setShowDeleteModal(false);
       setAddressToDelete(null);
     } catch (error) {
@@ -143,7 +143,7 @@ export default function AddressBook() {
 
         {/* Conditional rendering based on whether addresses exist */}
         {addresses.length === 0 ? (
-          // Empty state
+          
           <div className="py-10 sm:py-16">
             <div className="mx-auto flex max-w-md flex-col items-center text-center">
               <Image
@@ -162,7 +162,7 @@ export default function AddressBook() {
             </div>
           </div>
         ) : (
-          // Addresses list
+          
           <div className="mt-6">
             <div className="grid gap-6 md:grid-cols-2">
               {addresses.map((address) => (

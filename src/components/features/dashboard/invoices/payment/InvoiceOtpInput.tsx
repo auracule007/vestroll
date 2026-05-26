@@ -31,12 +31,12 @@ const InvoiceOtpInput: React.FC<InvoiceOtpInputProps> = ({
         }
       }, 400);
 
-      // Auto-focus next input if current input is filled
+      
       if (value !== "" && index < otp.length - 1) {
         inputRefs.current[index + 1]?.focus();
       }
 
-      // Check if OTP is complete
+      
       if (newOtp.every((digit) => digit !== "")) {
       }
     }
@@ -51,7 +51,7 @@ const InvoiceOtpInput: React.FC<InvoiceOtpInputProps> = ({
       newMask[index] = false;
       return newMask;
     });
-    // Go to previous input on backspace if current input is empty
+    
     if (e.key === "Backspace" && index > 0 && otp[index] === "") {
       setMask((prev) => {
         const newMask = [...prev];
@@ -66,13 +66,13 @@ const InvoiceOtpInput: React.FC<InvoiceOtpInputProps> = ({
     e.preventDefault();
     const pastedData = e.clipboardData.getData("text").trim();
 
-    // Check if pasted content matches the expected OTP format
+    
     const regex = new RegExp(`^\\d{${length}}$`);
     if (regex.test(pastedData)) {
       const digits = pastedData.split("");
       setOtp(digits);
 
-      // Focus the last input after paste
+      
       inputRefs.current[length - 1]?.focus();
       if (onComplete) {
         onComplete(pastedData);

@@ -43,9 +43,9 @@ describe("role utility", () => {
         });
 
         it("should return false for unrelated roles that happen to have similar letters but not the full keywords", () => {
-            // The current implementation uses .includes(), so "man" won't match "manager" BUT "manager" will match "man"?
-            // Wait, normalizedRole.includes(keyword) where keyword is "admin" or "manager".
-            // So "man" should be false. "manager" should be true.
+            
+            
+            
             expect(hasAdminOrManagerRole("man")).toBe(false);
             expect(hasAdminOrManagerRole("adm")).toBe(false);
             expect(hasAdminOrManagerRole("manage")).toBe(false);

@@ -98,7 +98,7 @@ export default function PreferencesPage() {
     { code: "it", name: "Italian", nativeName: "Italiano", flag: "🇮🇹" },
   ];
 
-  // Function to generate random IP addresses
+  
   const generateIP = (seed: number) => {
     const baseIPs = [
       `192.168.${seed}.${Math.floor(Math.random() * 255)}`,
@@ -108,7 +108,7 @@ export default function PreferencesPage() {
     return baseIPs[seed % 3];
   };
 
-  // Function to generate exact date/times
+  
   const generateDateTime = (daysAgo: number) => {
     const date = new Date();
     date.setDate(date.getDate() - daysAgo);

@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
     },
   },
   allowedDevOrigins: ["10.199.228.216"],
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@heroicons/react', 'lodash', 'date-fns', '@headlessui/react', '@radix-ui/react-icons'],
+  },
   images: {
     remotePatterns: [
       {

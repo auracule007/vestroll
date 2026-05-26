@@ -72,7 +72,7 @@ const HiringTemplatePage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
+      
       const formData: FormData = {
         jobTitle,
         description,

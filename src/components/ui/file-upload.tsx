@@ -55,7 +55,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const handleFileSelect = (selectedFile: File) => {
-    // Validate file size
+    
     if (selectedFile.size > maxSize * 1024 * 1024) {
       alert(`File size must be less than ${maxSize}MB`);
       return;
@@ -75,7 +75,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       </label>
 
       {file ? (
-        // File uploaded state - show file info with loading or completed state
+        
         <div className="border border-[#DCE0E5] rounded-[8px] px-4 py-4 bg-white dark:bg-gray-900 dark:border-gray-700">
           <div className="flex items-center gap-x-4">
             {/* File Icon */}

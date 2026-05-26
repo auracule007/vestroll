@@ -67,7 +67,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   };
   const handlePasswordChange = async (data: PasswordFormData) => {
     try {
-      // Simulate API call
+      
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       console.log("Password changed successfully");

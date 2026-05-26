@@ -131,7 +131,7 @@ export class MonnifyProvider implements PaymentProvider {
     }
 
     this.accessToken = data.responseBody.accessToken;
-    // Expire 60s early to avoid edge-case expiry during a request
+    
     this.tokenExpiresAt =
       Date.now() + (data.responseBody.expiresIn - 60) * 1000;
 

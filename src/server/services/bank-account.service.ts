@@ -30,7 +30,7 @@ export interface AccountVerificationResult {
 type EmployeeAccountUpdate = Partial<typeof employees.$inferInsert>;
 
 class BankAccountService {
-  // Mock bank validation API - in production, this would integrate with real banking APIs
+  
   async validateBankAccount(accountData: {
     accountNumber: string;
     routingNumber?: string;
@@ -40,16 +40,16 @@ class BankAccountService {
     bankCountry: string;
   }): Promise<BankValidationResult> {
     try {
-      // Simulate API call delay
+      
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Mock validation logic based on country and account format
+      
       const result: BankValidationResult = {
         isValid: false,
         confidence: 0,
       };
 
-      // US account validation (routing + account)
+      
       if (accountData.bankCountry === "US" && accountData.routingNumber && accountData.accountNumber) {
         const isValidRouting = this.validateUSRoutingNumber(accountData.routingNumber);
         const isValidAccount = this.validateUSAccountNumber(accountData.accountNumber);
@@ -107,7 +107,7 @@ class BankAccountService {
     }
   }
 
-  // Update employee account details
+  
   async updateEmployeeAccount(
     employeeId: string,
     accountData: EmployeeAccountUpdate,
@@ -126,7 +126,7 @@ class BankAccountService {
     }
   }
 
-  // Verify employee account
+  
   async verifyEmployeeAccount(employeeId: string, accountNumber: string, bankName: string): Promise<AccountVerificationResult> {
     try {
       const employee = await db
@@ -145,7 +145,7 @@ class BankAccountService {
 
       const emp = employee[0];
       
-      // Check if account details match
+      
       if (emp.accountNumber !== accountNumber || emp.bankName !== bankName) {
         return {
           isValid: false,
@@ -154,7 +154,7 @@ class BankAccountService {
         };
       }
 
-      // Validate the account
+      
       const validationResult = await this.validateBankAccount({
         accountNumber: emp.accountNumber!,
         routingNumber: emp.routingNumber || undefined,
@@ -172,7 +172,7 @@ class BankAccountService {
         };
       }
 
-      // Mark account as verified
+      
       await db
         .update(employees)
         .set({
@@ -203,7 +203,7 @@ class BankAccountService {
     }
   }
 
-  // Get employee account details
+  
   async getEmployeeAccount(employeeId: string) {
     try {
       const employee = await db
@@ -234,9 +234,9 @@ class BankAccountService {
     }
   }
 
-  // Validation helper methods
+  
   private validateUSRoutingNumber(routingNumber: string): boolean {
-    // US routing number validation (9 digits, Luhn algorithm)
+    
     if (!/^\d{9}$/.test(routingNumber)) return false;
     
     const digits = routingNumber.split('').map(Number);
@@ -249,30 +249,30 @@ class BankAccountService {
   }
 
   private validateUSAccountNumber(accountNumber: string): boolean {
-    // Basic US account number validation (8-17 digits)
+    
     return /^\d{8,17}$/.test(accountNumber);
   }
 
   private validateUKSortCode(sortCode: string): boolean {
-    // UK sort code validation (6 digits, format XX-XX-XX)
+    
     return /^\d{6}$/.test(sortCode);
   }
 
   private validateUKAccountNumber(accountNumber: string): boolean {
-    // Basic UK account number validation (8 digits)
+    
     return /^\d{8}$/.test(accountNumber);
   }
 
   private validateIBAN(iban: string): boolean {
-    // Basic IBAN validation
+    
     const cleanIBAN = iban.replace(/\s/g, '').toUpperCase();
     if (!/^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$/.test(cleanIBAN)) return false;
     
-    // Move first 4 characters to end and convert to numbers
+    
     const rearranged = cleanIBAN.substring(4) + cleanIBAN.substring(0, 4);
     const numeric = rearranged.replace(/[A-Z]/g, char => (char.charCodeAt(0) - 55).toString());
     
-    // Mod 97 check
+    
     let remainder = numeric;
     while (remainder.length > 2) {
       const block = remainder.substring(0, 9);
@@ -282,7 +282,7 @@ class BankAccountService {
     return parseInt(remainder, 10) % 97 === 1;
   }
 
-  // Mock bank name lookup methods
+  
   private getBankNameFromRouting(routingNumber: string): string {
     const routingBanks: Record<string, string> = {
       "021000021": "Bank of America",

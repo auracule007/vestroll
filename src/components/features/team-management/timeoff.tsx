@@ -52,11 +52,11 @@ function TeamMgtTimeoff() {
   const handleApprove = () => {
     if (!selectedTimeoff) return;
 
-    // Update the selected item
+    
     const updatedTimeoff = { ...selectedTimeoff, status: "Approved" as const };
     setSelectedTimeoff(updatedTimeoff);
 
-    // Update in the list
+    
     setTimeoffs((prev) =>
       prev.map((item) =>
         item.id === selectedTimeoff.id ? updatedTimeoff : item
@@ -67,11 +67,11 @@ function TeamMgtTimeoff() {
   const handleReject = (status: string, reason?: string) => {
     if (!selectedTimeoff) return;
 
-    // Update the selected item
+    
     const updatedTimeoff = { ...selectedTimeoff, status: "Rejected" as const };
     setSelectedTimeoff(updatedTimeoff);
 
-    // Update in the list
+    
     setTimeoffs((prev) =>
       prev.map((item) =>
         item.id === selectedTimeoff.id ? updatedTimeoff : item

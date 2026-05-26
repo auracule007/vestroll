@@ -52,7 +52,7 @@ describe("POST /api/v1/auth/2fa/verify", () => {
         where: vi.fn().mockResolvedValue([mockUser]),
       }),
     });
-    vi.mocked(AuthUtils.generateToken).mockReturnValue("mock-token");
+    vi.mocked(AuthUtils.generateToken).mockResolvedValue("mock-token");
 
     const req = createMockRequest({
       userId: "00000000-0000-0000-0000-000000000000",

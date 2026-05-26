@@ -15,29 +15,16 @@ export async function resetDatabase() {
   }
 }
 
-/**
- * Builds a stateful in-memory DB mock whose `transaction` executes its
- * callback against the same mock context – no live database required.
- *
- * The returned `mockDb` object is a drop-in replacement for the `db` import
- * inside the modules under test. Wire it up with `vi.mock("../db", ...)` and
- * re-assign the individual method spies via `mockDb.<method>.mockImplementation`
- * before each assertion.
- *
- * Stored rows are accessible on `mockDb._store` for post-call assertions.
- */
+
 export function createTransactionalMockDb() {
-  /** Simple keyed row store: tableName -> rows[] */
+  
   const store: Record<string, Record<string, unknown>[]> = {
     users: [],
     organizations: [],
     emailVerifications: [],
   };
 
-  /**
-   * Returns a fluent Drizzle-style insert builder that pushes rows into the
-   * in-memory store and resolves with those rows on `.returning()`.
-   */
+  
   function buildInsert(targetStore: Record<string, unknown>[]) {
     return {
       values: vi.fn((row: Record<string, unknown>) => ({
@@ -46,10 +33,7 @@ export function createTransactionalMockDb() {
     };
   }
 
-  /**
-   * Returns a fluent Drizzle-style select builder whose `.limit(1)` resolves
-   * with the first matching row from the given `sourceRows` array (or `[]`).
-   */
+  
   function buildSelect(sourceRows: Record<string, unknown>[]) {
     const row = sourceRows.length > 0 ? [sourceRows[sourceRows.length - 1]] : [];
     return {
@@ -65,10 +49,7 @@ export function createTransactionalMockDb() {
     };
   }
 
-  /**
-   * Returns a fluent Drizzle-style update builder whose `.where()` resolves
-   * with `undefined` (Drizzle update does not return rows by default).
-   */
+  
   function buildUpdate() {
     return {
       set: vi.fn().mockReturnValue({
@@ -120,11 +101,7 @@ export function createTransactionalMockDb() {
       where: vi.fn().mockResolvedValue(undefined),
     })),
 
-    /**
-     * Executes the transactional callback immediately with the same mock
-     * context, mirroring how Drizzle's `db.transaction` works while keeping
-     * all side-effects in the in-memory store.
-     */
+    
     transaction: vi.fn(async (callback: (tx: unknown) => Promise<unknown>) => {
       const txContext = {
         insert: vi.fn((table: { tableName?: string }) => {

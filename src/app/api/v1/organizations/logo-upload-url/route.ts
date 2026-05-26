@@ -52,20 +52,20 @@ import { eq } from "drizzle-orm";
  */
 export async function GET(req: NextRequest) {
   try {
-    // Authenticate the request
+    
     const { userId, user } = await AuthUtils.authenticateRequest(req);
 
-    // Get organization ID from user's profile
+    
     if (!user.organizationId) {
       throw new AppError("User is not associated with an organization", 400);
     }
 
-    // Parse query parameters
+    
     const { searchParams } = new URL(req.url);
     const filename = searchParams.get("filename");
     const contentType = searchParams.get("contentType");
 
-    // Validate required parameters
+    
     if (!filename) {
       throw new AppError("Filename is required", 400);
     }
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
       throw new AppError("Content type is required", 400);
     }
 
-    // Generate signed upload URL
+    
     const result = await LogoUploadService.getSignedUploadUrl(
       user.organizationId,
       filename,

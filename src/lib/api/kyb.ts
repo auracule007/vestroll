@@ -19,10 +19,7 @@ export class KybService {
     return apiClient.get("/api/v1/kyb/status");
   }
 
-  /**
-   * Step 1 of file upload: request a presigned S3 URL from the server.
-   * Returns { signedUrl, key } so the caller can PUT the raw file to S3.
-   */
+  
   static async getUploadUrl(filename: string, contentType: string): Promise<KybUploadUrlResponse> {
     return apiClient.post<KybUploadUrlResponse>("/api/v1/kyb/upload", {
       filename,
@@ -30,7 +27,7 @@ export class KybService {
     });
   }
 
-  /** Submit KYB verification data after all files have been uploaded to S3. */
+  
   static async submit(data: KybSubmitData): Promise<void> {
     return apiClient.post<void>("/api/v1/kyb/submit", data);
   }

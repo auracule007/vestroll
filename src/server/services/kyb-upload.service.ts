@@ -14,7 +14,7 @@ const S3_CONFIG = {
 };
 
 const BUCKET_NAME = process.env.AWS_S3_BUCKET || "vestroll-assets";
-const SIGNED_URL_EXPIRY = 300; // 5 minutes
+const SIGNED_URL_EXPIRY = 300; 
 
 export interface SignedUploadUrl {
   signedUrl: string;
@@ -43,7 +43,7 @@ export class KybUploadService {
     filename: string,
     contentType: string,
   ): Promise<SignedUploadUrl> {
-    // Validate content type
+    
     if (!(KYB_FILE_CONSTRAINTS.allowedMimeTypes as readonly string[]).includes(contentType)) {
       throw new AppError(
         `Invalid content type. Allowed: ${KYB_FILE_CONSTRAINTS.allowedMimeTypes.join(", ")}`,
@@ -56,7 +56,7 @@ export class KybUploadService {
       throw new AppError("File must have an extension", 400);
     }
 
-    // Generate unique key: kyb/{userId}/{uuid}.{ext}
+    
     const uniqueId = crypto.randomUUID();
     const key = `kyb/${userId}/${uniqueId}.${extension}`;
 

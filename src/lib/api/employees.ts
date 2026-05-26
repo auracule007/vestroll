@@ -1,7 +1,7 @@
 import { apiClient } from "../api-client";
 import { PaginatedResponse } from "@/types/pagination";
 
-// ─── Employee list ──────────────────────────────────────────────────────────
+
 
 export interface EmployeeItem {
   id: string;
@@ -41,7 +41,7 @@ export interface AddEmployeeResponse {
   invitedAt: string;
 }
 
-// ─── Bank account ────────────────────────────────────────────────────────────
+
 
 export interface AccountDetails {
   id: string;
@@ -100,7 +100,7 @@ export interface VerifyAccountPayload {
   bankName: string;
 }
 
-// ─── Exported functions (list / add) ────────────────────────────────────────
+
 
 export async function getEmployees(
   params: GetEmployeesParams = {}
@@ -124,40 +124,37 @@ export async function addEmployee(
   return apiClient.post<AddEmployeeResponse>("/api/v1/team/employees", payload);
 }
 
-// ─── EmployeesService (detail + accounts) ───────────────────────────────────
+
 
 export class EmployeesService {
-  /** Fetch a single employee by ID. */
+  
   static async getEmployee(employeeId: string): Promise<EmployeeDetail> {
     return apiClient.get<EmployeeDetail>(`/api/v1/team/employees/${employeeId}`);
   }
 
-  /** Fetch all bank accounts belonging to an employee. */
+  
   static async getAccounts(employeeId: string): Promise<AccountDetails[]> {
     return apiClient.get<AccountDetails[]>(
       `/api/v1/accounts?employeeId=${employeeId}`
     );
   }
 
-  /** Create or update a bank account (upsert via PUT). */
+  
   static async upsertAccount(data: CreateAccountPayload): Promise<AccountDetails> {
     return apiClient.put<AccountDetails>("/api/v1/accounts", data);
   }
 
-  /** Verify a bank account (mark as verified by the backend). */
+  
   static async verifyAccount(payload: VerifyAccountPayload): Promise<void> {
     return apiClient.post<void>("/api/v1/accounts/verify", payload);
   }
 
-  /** Delete a bank account by ID. */
+  
   static async deleteAccount(accountId: string): Promise<void> {
     return apiClient.delete<void>(`/api/v1/accounts/${accountId}`);
   }
 
-  /**
-   * Validate bank account details before saving.
-   * Used both in AccountForm and Step3PaymentDetails.
-   */
+  
   static async validateAccount(
     payload: ValidateAccountPayload
   ): Promise<ValidateAccountResult> {

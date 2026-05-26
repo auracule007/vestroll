@@ -57,7 +57,7 @@ export function DepositModal({ open, onOpenChange }: DepositModalProps) {
         authorizationUrl: result.authorizationUrl,
       });
 
-      // Redirect to payment gateway
+      
       const paymentUrl = result.checkoutUrl || result.paymentUrl || result.authorizationUrl;
       if (paymentUrl) {
         window.location.href = paymentUrl;

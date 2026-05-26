@@ -1,18 +1,4 @@
-/**
- * Comprehensive seed script for Vestroll.
- *
- * Run:  pnpm db:seed
- *
- * Safe to run multiple times — uses onConflictDoNothing throughout.
- *
- * What it creates:
- *   • 1 test organization  (Vestroll Inc.)
- *   • 1 admin user         (seed admin)
- *   • 55 employees         (7 departments, mixed Active/Inactive, Freelancer/Contractor)
- *   • 1-3 milestones per employee
- *   • 1 contract per employee
- *   • 1 timesheet entry per employee
- */
+
 import { faker } from "@faker-js/faker";
 import { db } from "./index";
 import {
@@ -187,18 +173,7 @@ async function seed() {
 
   console.log("\nInserting 55 employees...");
 
-  /**
-   * Distribution plan (≥5 departments, mix of Active/Inactive and both types):
-   *  Engineering      → 12  (heavy)
-   *  Design           →  8
-   *  Product          →  7
-   *  Marketing        →  7
-   *  Finance          →  7
-   *  Operations       →  7
-   *  Customer Success →  7
-   *                     --
-   *                     55
-   */
+  
   const distribution: Array<{ dept: string; count: number }> = [
     { dept: "Engineering", count: 12 },
     { dept: "Design", count: 8 },
@@ -222,10 +197,10 @@ async function seed() {
       const firstName = faker.person.firstName();
       const lastName = faker.person.lastName();
 
-      // ~75 % Active, ~25 % Inactive
+      
       const status = pickWeighted([...EMPLOYEE_STATUSES], [75, 25]);
 
-      // ~60 % Contractor, ~40 % Freelancer
+      
       const type = pickWeighted([...EMPLOYEE_TYPES], [60, 40]);
 
       const email = faker.internet
@@ -266,7 +241,7 @@ async function seed() {
   console.log(`\n   ✔ Inserted ${employeeRecords.length} new employee records`);
 
   if (employeeRecords.length === 0) {
-    // Employees already exist — fetch existing ids so we can still seed milestones etc.
+    
     console.log(
       "Employees already present; fetching existing ids for dependents...",
     );

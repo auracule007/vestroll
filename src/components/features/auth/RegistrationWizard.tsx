@@ -67,7 +67,7 @@ export default function RegistrationWizard() {
         businessEmail: formData.businessEmail,
       });
 
-      // Success - Registration initiated, OTP sent
+      
       nextStep();
     } catch (err) {
       showError(err instanceof Error ? err.message : "Registration failed");

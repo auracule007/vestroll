@@ -72,16 +72,16 @@ export function AddEmployeeWizard({
       }));
     }
 
-    // Skip bank details if crypto is selected
+    
     if (activeStep === 1 && (stepData as PaymentMethodData).paymentMethod === "crypto") {
-      setActiveStep(3); // Go directly to Review
+      setActiveStep(3); 
     } else {
       setActiveStep(prev => prev + 1);
     }
   };
 
   const handleBack = () => {
-    // If coming back from Review and crypto was selected, go to Step 2
+    
     if (activeStep === 3 && formData.paymentMethod.paymentMethod === "crypto") {
       setActiveStep(1);
     } else {
@@ -174,7 +174,7 @@ export function AddEmployeeWizard({
                 steps={WIZARD_STEPS.map(s => s.label)} 
                 activeStep={activeStep} 
                 setActiveStep={(step) => {
-                  // Optional: allow jumping back but not forward past visited steps
+                  
                   if (step < activeStep) setActiveStep(step);
                 }} 
               />

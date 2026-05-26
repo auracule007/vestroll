@@ -37,7 +37,7 @@ export function AccountManagement({ employeeId, employeeName }: AccountManagemen
 
     try {
       const data = await EmployeesService.getAccounts(employeeId);
-      // Attach employee info that isn't returned by the API
+      
       const accountsWithEmployee = data.map((account) => ({
         ...account,
         employeeId,

@@ -32,7 +32,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Get the selected option for display
+  
   const selectedOption =
     Array.isArray(options) &&
     options.length > 0 &&
@@ -43,7 +43,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         )
       : null;
 
-  // Close dropdown when clicking outside
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

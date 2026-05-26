@@ -85,15 +85,15 @@ export const validateAccountNumberSchema = z
   })
   .refine(
     (data) => {
-      // For US accounts, routing number is required
+      
       if (data.bankCountry === "US" && !data.routingNumber) {
         return false;
       }
-      // For UK accounts, sort code is required
+      
       if (data.bankCountry === "GB" && !data.sortCode) {
         return false;
       }
-      // For European accounts, IBAN is required
+      
       if (
         [
           "DE",

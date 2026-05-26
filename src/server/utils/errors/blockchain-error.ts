@@ -1,11 +1,6 @@
-/**
- * BlockchainError hierarchy for wrapping stellar-sdk and RPC errors
- * into consistent, actionable error types for API consumers.
- */
 
-/**
- * Base class for all blockchain-related errors
- */
+
+
 export class BlockchainError extends Error {
   constructor(
     message: string,
@@ -17,9 +12,7 @@ export class BlockchainError extends Error {
   }
 }
 
-/**
- * Thrown when the requested account does not exist on the blockchain
- */
+
 export class AccountNotFoundError extends BlockchainError {
   constructor(
     message: string = "Account not found",
@@ -29,9 +22,7 @@ export class AccountNotFoundError extends BlockchainError {
   }
 }
 
-/**
- * Thrown when the account has insufficient funds for the requested operation
- */
+
 export class InsufficientFundsError extends BlockchainError {
   constructor(
     message: string = "Insufficient funds",
@@ -49,9 +40,7 @@ export class InsufficientFundsError extends BlockchainError {
   }
 }
 
-/**
- * Thrown when transaction simulation fails
- */
+
 export class SimulationFailedError extends BlockchainError {
   constructor(
     message: string = "Transaction simulation failed",
@@ -62,9 +51,7 @@ export class SimulationFailedError extends BlockchainError {
   }
 }
 
-/**
- * Thrown when a transaction is rejected by the network or RPC
- */
+
 export class TransactionRejectedError extends BlockchainError {
   constructor(
     message: string = "Transaction rejected",
@@ -76,17 +63,14 @@ export class TransactionRejectedError extends BlockchainError {
   }
 }
 
-/**
- * Helper to detect and wrap stellar-sdk / RPC errors
- * Inspects error messages and codes to determine the appropriate error type
- */
+
 export function wrapBlockchainError(error: unknown): BlockchainError {
   const errorMessage = error instanceof Error ? error.message : String(error);
   const originalError = error instanceof Error ? error : undefined;
 
-  // Check for common error patterns in stellar-sdk/rpc responses
   
-  // Account not found patterns
+  
+  
   if (
     errorMessage.toLowerCase().includes("account not found") ||
     errorMessage.toLowerCase().includes("account does not exist") ||
@@ -98,7 +82,7 @@ export function wrapBlockchainError(error: unknown): BlockchainError {
     );
   }
 
-  // Insufficient funds patterns
+  
   if (
     errorMessage.toLowerCase().includes("insufficient") ||
     errorMessage.toLowerCase().includes("not enough") ||
@@ -112,7 +96,7 @@ export function wrapBlockchainError(error: unknown): BlockchainError {
     );
   }
 
-  // Simulation failed patterns
+  
   if (
     errorMessage.toLowerCase().includes("simulation") ||
     errorMessage.toLowerCase().includes("simulate") ||
@@ -125,7 +109,7 @@ export function wrapBlockchainError(error: unknown): BlockchainError {
     );
   }
 
-  // Transaction rejected patterns
+  
   if (
     errorMessage.toLowerCase().includes("transaction") &&
     (errorMessage.toLowerCase().includes("rejected") ||
@@ -140,7 +124,7 @@ export function wrapBlockchainError(error: unknown): BlockchainError {
     );
   }
 
-  // Default to base BlockchainError
+  
   return new BlockchainError(
     `Blockchain error: ${errorMessage}`,
     "blockchain_error",

@@ -133,7 +133,7 @@ export class TwoFactorService {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     for (let i = 0; i < SECURITY_CONFIG.backupCodeCount; i++) {
-      // Generate a 12-character alphanumeric string and format as XXXX-XXXX-XXXX
+      
       let code = "";
       for (let j = 0; j < 12; j++) {
         code += chars.charAt(Math.floor(Math.random() * chars.length));

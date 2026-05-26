@@ -7,7 +7,7 @@ export default function ContractSuccessModal() {
   const [isOpen, setIsOpen] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  // Demo contract link
+  
   const contractLink = "https://app.VestBlock.sol/4cbab924-3466-49...";
 
   const handleCopy = async () => {

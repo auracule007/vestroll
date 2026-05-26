@@ -4,14 +4,14 @@ import React, { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { AlertCircle, Calendar, Users, DollarSign, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 
-// Mock data for stat cards
+
 const statsData = {
   totalMonthlyPayout: "₦2,450,000",
   totalEmployees: 24,
   nextPayoutDate: "May 15, 2026",
 };
 
-// Mock data for payout overview chart
+
 const payoutChartData = [
   { month: "Jan", payout: 1800000 },
   { month: "Feb", payout: 2100000 },
@@ -21,7 +21,7 @@ const payoutChartData = [
   { month: "Jun", payout: 2200000 },
 ];
 
-// Mock data for payout schedule table
+
 const payoutScheduleData = [
   {
     id: "1",
@@ -139,7 +139,7 @@ function getContractTypeBadge(type: string): string {
   }
 }
 
-// Stat Card Component
+
 interface StatCardProps {
   icon: React.ReactNode;
   label: string;
@@ -168,7 +168,7 @@ function StatCard({ icon, label, value, iconBg }: StatCardProps) {
   );
 }
 
-// Urgent Action Banner Component
+
 interface UrgentActionBannerProps {
   visible: boolean;
 }
@@ -197,7 +197,7 @@ function UrgentActionBanner({ visible }: UrgentActionBannerProps) {
   );
 }
 
-// Payout Schedule Table Component
+
 interface PayoutScheduleTableProps {
   data: typeof payoutScheduleData;
 }
@@ -400,7 +400,7 @@ function PayoutScheduleTable({ data }: PayoutScheduleTableProps) {
   );
 }
 
-// Mobile Card View Component
+
 interface MobilePayoutCardsProps {
   data: typeof payoutScheduleData;
 }
@@ -485,9 +485,9 @@ function MobilePayoutCards({ data }: MobilePayoutCardsProps) {
   );
 }
 
-// Main Payroll Overview Component
+
 export default function PayrollOverview() {
-  const [showPendingAction] = useState(true); // Set to false to hide banner
+  const [showPendingAction] = useState(true); 
 
   return (
     <div className="space-y-6">

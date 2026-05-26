@@ -5,16 +5,9 @@ import { promisify } from "util";
 const gzipAsync = promisify(gzip);
 const brotliAsync = promisify(brotliCompress);
 
-const COMPRESSION_THRESHOLD = 1024; // 1 KB
+const COMPRESSION_THRESHOLD = 1024; 
 
-/**
- * Compresses a NextResponse body when it exceeds 1 KB and the client
- * signals support via Accept-Encoding. Brotli is preferred over gzip.
- *
- * Setting Content-Encoding on the returned response signals to the
- * Next.js server-level compression layer (compress: true) that the
- * body is already encoded, preventing double-compression.
- */
+
 export async function compressResponse(
   response: NextResponse,
   req: NextRequest,

@@ -168,7 +168,7 @@ export default function AddressBookEmptyModal({
         <div className=" absolute   right-8  top-11 ">
           {listAddresses.length > 0 && (
             <button
-              // onClick={()=>{}}
+              
               aria-label="Add address"
               className=" text-[#5A42DE] flex gap-1 items-center  font-medium text-sm"
             >

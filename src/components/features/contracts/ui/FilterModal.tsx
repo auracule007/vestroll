@@ -76,7 +76,7 @@ export default function FilterModal({
     return () => window.removeEventListener("keydown", trap);
   }, []);
 
-  // --- APPLY HANDLER ---
+  
   const handleApply = () => {
     onApply(selection);
   };

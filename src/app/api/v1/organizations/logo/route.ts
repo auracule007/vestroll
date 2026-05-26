@@ -6,16 +6,14 @@ import { LogoUploadService } from "@/server/services/logo-upload.service";
 import { db, users, companyProfiles } from "@/server/db";
 import { eq } from "drizzle-orm";
 
-// Allowed domains for logo URLs (same validation as user avatars)
+
 const ALLOWED_LOGO_DOMAINS = [
   "vestroll-assets.s3.amazonaws.com",
   "s3.amazonaws.com",
   "storage.googleapis.com",
 ];
 
-/**
- * Validates that the logo URL is from an allowed domain
- */
+
 function validateLogoUrl(logoUrl: string): void {
   try {
     const url = new URL(logoUrl);
@@ -81,15 +79,15 @@ function validateLogoUrl(logoUrl: string): void {
  */
 export async function PATCH(req: NextRequest) {
   try {
-    // Authenticate the request
+    
     const { userId, user } = await AuthUtils.authenticateRequest(req);
 
-    // Get organization ID from user's profile
+    
     if (!user.organizationId) {
       throw new AppError("User is not associated with an organization", 400);
     }
 
-    // Parse request body
+    
     const body = await req.json();
     const { key } = body;
 
@@ -97,18 +95,18 @@ export async function PATCH(req: NextRequest) {
       throw new AppError("Key is required", 400);
     }
 
-    // Validate the key format (should be logos/{orgId}/{uuid}.{ext})
+    
     if (!key.startsWith("logos/")) {
       throw new AppError("Invalid key format", 400);
     }
 
-    // Construct the logo URL
+    
     const logoUrl = LogoUploadService.getLogoUrl(key);
 
-    // Validate the URL domain
+    
     validateLogoUrl(logoUrl);
 
-    // Check if company profile exists
+    
     const [existingProfile] = await db
       .select()
       .from(companyProfiles)
@@ -116,14 +114,14 @@ export async function PATCH(req: NextRequest) {
       .limit(1);
 
     if (!existingProfile) {
-      // Create a new company profile with the logo
+      
       const [newProfile] = await db
         .insert(companyProfiles)
         .values({
           userId: userId,
           organizationId: user.organizationId as string,
           logoUrl,
-          // Required fields - we'll use placeholders for now
+          
           brandName: user.organizationName || "Unknown",
           registeredName: user.organizationName || "Unknown",
           registrationNumber: "",
@@ -140,7 +138,7 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    // Update existing profile
+    
     const [updatedProfile] = await db
       .update(companyProfiles)
       .set({

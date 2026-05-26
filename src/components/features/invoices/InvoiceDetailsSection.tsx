@@ -5,7 +5,7 @@ import { Invoice } from "@/lib/data/invoices";
 import Image from "next/image";
 import { formatDateCustom } from "@/utils/date";
 
-// helpers
+
 function calculateDueDate(issueDate: string): string {
   const parsed = Date.parse(issueDate);
   if (isNaN(parsed)) return "N/A";
