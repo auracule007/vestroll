@@ -225,7 +225,7 @@ const BillingAddressForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  // Country data with flags
+  
   const countries: Country[] = [
     { code: "NG", name: "Nigeria", flag: "🇳🇬" },
     { code: "US", name: "United States", flag: "🇺🇸" },
@@ -249,7 +249,7 @@ const BillingAddressForm: React.FC = () => {
     { code: "TH", name: "Thailand", flag: "🇹🇭" },
   ];
 
-  // Nigerian states
+  
   const nigerianStates = [
     "Abia",
     "Adamawa",
@@ -290,7 +290,7 @@ const BillingAddressForm: React.FC = () => {
     "FCT",
   ];
 
-  // US states for reference
+  
   const usStates = [
     "Alabama",
     "Alaska",
@@ -344,7 +344,7 @@ const BillingAddressForm: React.FC = () => {
     "Wyoming",
   ];
 
-  // Get states based on selected country
+  
   const getStatesForCountry = (country: string): string[] => {
     switch (country) {
       case "Nigeria":
@@ -392,7 +392,7 @@ const BillingAddressForm: React.FC = () => {
 
     setIsSubmitting(true);
 
-    // Simulate API call
+    
     setTimeout(() => {
       console.log("Billing address submitted:", formData);
       success("Billing address saved successfully!");
@@ -406,12 +406,12 @@ const BillingAddressForm: React.FC = () => {
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    // Clear error when user starts typing
+    
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
 
-    // Clear state when country changes
+    
     if (field === "country" && formData.country !== value) {
       setFormData((prev) => ({ ...prev, stateProvince: "" }));
     }

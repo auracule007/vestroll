@@ -40,7 +40,7 @@ export default function FirstContractBanner() {
         transition={{ delay: 0.4, duration: 0.4 }}
       >
         <Link
-          href={"/app/contracts/create"}
+          href={"/contracts/create"}
           className="inline-flex items-center justify-center px-4 py-2 h-12 ml-auto md:py-2 text-primary-500 bg-white font-medium rounded-full shadow-sm hover:shadow hover:bg-gray-100 focus:outline-none focus:ring-2 transition-all duration-200 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
         >
           New contract

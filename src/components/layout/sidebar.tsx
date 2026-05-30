@@ -8,6 +8,8 @@ import { Settings, LogOut, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { ThemeToggle } from "../shared/theme-toggle";
 import logoSet from "@/../public/LogoSet.png";
+import { AuthService } from "@/lib/api/auth";
+import { useRouter } from "next/navigation";
 
 type NavItem = {
   name: string;
@@ -44,7 +46,20 @@ export default function Sidebar({
   onCloseMobile,
 }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
+
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    try {
+      await AuthService.logout();
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      
+      router.push("/login");
+    }
+  };
 
   useEffect(() => setIsClient(true), []);
 
@@ -136,26 +151,26 @@ export default function Sidebar({
           })}
         </ul>
 
-        <div className="-mx-4 border-t border-gray-300 mt-50">
+        <div className="-mx-4 border-t border-gray-300 mt-auto">
           <div className="px-4 pt-3 space-y-2">
             <div className="px-4 py-2">
               <ThemeToggle />
             </div>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm   text-[#b91c1c] hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:text-red-400 dark:hover:bg-red-900/20"
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-sm   text-[#b91c1c] hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:text-red-400 dark:hover:bg-red-900/20"
               aria-label="Sign out"
             >
               <LogOut className="w-5 h-5" aria-hidden="true" />
               <span>Sign out</span>
-            </Link>
+            </button>
           </div>
         </div>
       </nav>
     </div>
   );
 
-  // Desktop sidebar
+  
   return (
     <>
       <aside className="hidden lg:flex lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 lg:w-72 lg:flex-col lg:border-r lg:border-[#e5e7eb] lg:bg-white lg:overflow-y-auto dark:lg:bg-gray-900 dark:lg:border-gray-800">
@@ -230,16 +245,16 @@ export default function Sidebar({
               })}
             </ul>
 
-            <div className="-mx-4 border-t border-gray-300 mt-50 dark:border-gray-800">
+            <div className="-mx-4 border-t border-gray-300 mt-auto dark:border-gray-800">
               <div className="px-4 pt-3">
-                <Link
-                  href="#"
-                  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm   text-[#b91c1c] hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:hover:bg-red-900/20"
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-sm   text-[#b91c1c] hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:hover:bg-red-900/20"
                   aria-label="Sign out"
                 >
                   <LogOut className="w-5 h-5" aria-hidden="true" />
                   <span>Sign out</span>
-                </Link>
+                </button>
               </div>
             </div>
           </nav>
@@ -333,19 +348,19 @@ export default function Sidebar({
               })}
             </ul>
 
-            <div className="-mx-4 border-t border-gray-300 mt-50 dark:border-gray-800">
+            <div className="-mx-4 border-t border-gray-300 mt-auto dark:border-gray-800">
               <div className="px-4 pt-3 space-y-2">
                 <div className="px-4 py-2">
                   <ThemeToggle />
                 </div>
-                <Link
-                  href="#"
-                  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm   text-[#b91c1c] hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:hover:bg-red-900/20"
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-sm   text-[#b91c1c] hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 dark:hover:bg-red-900/20"
                   aria-label="Sign out"
                 >
                   <LogOut className="w-5 h-5" aria-hidden="true" />
                   <span>Sign out</span>
-                </Link>
+                </button>
               </div>
             </div>
           </nav>

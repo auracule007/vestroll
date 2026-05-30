@@ -33,7 +33,7 @@ export default function RegisteredAddressPage() {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Pre-fill from API
+  
   useEffect(() => {
     OrganizationApi.getProfile()
       .then((profile) => {
@@ -90,7 +90,7 @@ export default function RegisteredAddressPage() {
     <div className="">
       <div className="mb-3 lg:mb-6 bg-white py-6 px-4">
         <Link
-          href="/app/settings"
+          href="/settings"
           className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />

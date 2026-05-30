@@ -182,7 +182,7 @@ export default function PermissionFormView({
       <PermissionsInfoModal
         isOpen={showInfo}
         onClose={() => setShowInfo(false)}
-        iconSrc="/permission-icon.png" // your public asset (the purple circle)
+        iconSrc="/permission-icon.png" 
       />
     </div>
   );

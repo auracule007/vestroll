@@ -43,7 +43,7 @@ const CreateTemplateModal: React.FC<CreateTemplateModalProps> = ({
   const editorRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Rich text editor functions
+  
   const execCommand = (command: string, value?: string): void => {
     document.execCommand(command, false, value || "");
     editorRef.current?.focus();
@@ -84,7 +84,7 @@ const CreateTemplateModal: React.FC<CreateTemplateModalProps> = ({
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
+      
       const formData: FormData = {
         jobTitle,
         description,
@@ -96,7 +96,7 @@ const CreateTemplateModal: React.FC<CreateTemplateModalProps> = ({
       console.log("Form submitted:", formData);
       alert("Template created successfully!");
 
-      // Reset form and close modal
+      
       setJobTitle("");
       setDescription("");
       setTimeOffDays("");
@@ -112,7 +112,7 @@ const CreateTemplateModal: React.FC<CreateTemplateModalProps> = ({
     }
   };
 
-  // Handle click outside modal
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -134,7 +134,7 @@ const CreateTemplateModal: React.FC<CreateTemplateModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  // Handle ESC key
+  
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {

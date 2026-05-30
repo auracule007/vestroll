@@ -45,11 +45,11 @@ export default function PermissionsTab() {
 
   const openPermissionView = (user?: User): void => {
     if (user) {
-      // Navigate to set-permission page with user data as query parameter
+      
       const userData = encodeURIComponent(JSON.stringify(user));
       router.push(`/settings/permissions/permission-form?user=${userData}`);
     } else {
-      // Navigate to set-permission page for new user
+      
       router.push("/settings/permissions/permission-form");
     }
   };

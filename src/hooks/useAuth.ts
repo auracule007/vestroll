@@ -20,9 +20,7 @@ interface UseAuthReturn {
   clearError: () => void;
 }
 
-/**
- * Hook for managing authentication-related actions (login, register, forgot/reset password).
- */
+
 export const useAuth = (): UseAuthReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,7 +92,7 @@ export const useAuth = (): UseAuthReturn => {
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Password reset failed");
-      throw err; // Re-throw to allow component to handle success/failure
+      throw err; 
     } finally {
       setIsLoading(false);
     }

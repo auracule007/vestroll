@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 import ModalWelcomeOnboard from "@/components/shared/modal-welcome-onboard";
 import Stepper from "@/components/features/auth/Stepper";
 import { AuthService } from "@/lib/api/auth";
+import { KybService } from "@/lib/api/kyb";
 import FileUpload from "@/components/ui/file-upload";
 
 interface FormData {
@@ -27,8 +28,9 @@ interface FormErrors {
   businessDescription?: string;
   registrationType?: string;
   registrationNo?: string;
-  incorporationCertificate?: string;
-  memorandumArticle?: string;
+  incorporationCertificatePath?: string;
+  memorandumArticlePath?: string;
+  formC02C07Path?: string;
 }
 
 interface DropdownProps {
@@ -165,7 +167,7 @@ const BusinessRegistrationForm: React.FC = () => {
     "Other",
   ];
 
-  // Calculate progress based on form completion
+  
   useEffect(() => {
     const storedData = localStorage.getItem("registrationData");
     if (storedData) {
@@ -219,11 +221,11 @@ const BusinessRegistrationForm: React.FC = () => {
     }
 
     if (!formData.incorporationCertificatePath) {
-      newErrors.incorporationCertificate = "Incorporation certificate is required";
+      newErrors.incorporationCertificatePath = "Incorporation certificate is required";
     }
 
     if (!formData.memorandumArticlePath) {
-      newErrors.memorandumArticle = "Memorandum & Article is required";
+      newErrors.memorandumArticlePath = "Memorandum & Article is required";
     }
 
     setErrors(newErrors);
@@ -232,22 +234,13 @@ const BusinessRegistrationForm: React.FC = () => {
 
   const uploadFile = async (file: File, field: keyof FormData) => {
     try {
-      // 1. Get signed URL
-      const response = await fetch("/api/v1/kyb/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          filename: file.name,
-          contentType: file.type,
-        }),
-      });
+      
+      const { signedUrl, key } = await KybService.getUploadUrl(
+        file.name,
+        file.type
+      );
 
-      const { data, success, message } = await response.json();
-      if (!success) throw new Error(message);
-
-      const { signedUrl, key } = data;
-
-      // 2. Upload to S3
+      
       const uploadRes = await fetch(signedUrl, {
         method: "PUT",
         body: file,
@@ -256,14 +249,14 @@ const BusinessRegistrationForm: React.FC = () => {
 
       if (!uploadRes.ok) throw new Error("Failed to upload to S3");
 
-      // 3. Update state
+      
       setFormData((prev) => ({ ...prev, [field]: key }));
-      if (errors[field as keyof FormErrors]) {
-        setErrors((prev) => ({ ...prev, [field as keyof FormErrors]: undefined }));
+      if (errors[field]) {
+        setErrors((prev) => ({ ...prev, [field]: undefined }));
       }
     } catch (error) {
       console.error("Upload failed:", error);
-      setErrors((prev) => ({ ...prev, [field as keyof FormErrors]: "Upload failed. Please try again." }));
+      setErrors((prev) => ({ ...prev, [field]: "Upload failed. Please try again." }));
     }
   };
 
@@ -293,20 +286,16 @@ const BusinessRegistrationForm: React.FC = () => {
         businessDescription: formData.businessDescription,
       };
 
-      // Submit complete registration data using AuthService
+      
       await AuthService.completeRegistration(completeData);
 
-      // Submit KYB data
-      await fetch("/api/v1/kyb/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          registrationType: formData.registrationType,
-          registrationNo: formData.registrationNo,
-          incorporationCertificatePath: formData.incorporationCertificatePath,
-          memorandumArticlePath: formData.memorandumArticlePath,
-          formC02C07Path: formData.formC02C07Path || undefined,
-        }),
+      
+      await KybService.submit({
+        registrationType: formData.registrationType,
+        registrationNo: formData.registrationNo,
+        incorporationCertificatePath: formData.incorporationCertificatePath,
+        memorandumArticlePath: formData.memorandumArticlePath,
+        formC02C07Path: formData.formC02C07Path || undefined,
       });
 
       console.log("Registration completed successfully:", completeData);
@@ -322,7 +311,7 @@ const BusinessRegistrationForm: React.FC = () => {
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    // Clear error when user starts typing
+    
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
@@ -496,7 +485,7 @@ const BusinessRegistrationForm: React.FC = () => {
                 file={formData.incorporationCertificatePath ? new File([], "Uploaded Certificate") : null}
                 accept=".png,.jpg,.jpeg,.pdf"
                 maxSize={5}
-                error={errors.incorporationCertificate}
+                error={errors.incorporationCertificatePath}
               />
 
               <FileUpload
@@ -505,7 +494,7 @@ const BusinessRegistrationForm: React.FC = () => {
                 file={formData.memorandumArticlePath ? new File([], "Uploaded Memorandum") : null}
                 accept=".png,.jpg,.jpeg,.pdf"
                 maxSize={5}
-                error={errors.memorandumArticle}
+                error={errors.memorandumArticlePath}
               />
 
               <FileUpload

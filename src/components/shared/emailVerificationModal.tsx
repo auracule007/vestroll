@@ -37,7 +37,7 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // Effect to show modal when countdown finishes
+  
   useEffect(() => {
     if (countdown === 0) {
       const timer = setTimeout(() => {

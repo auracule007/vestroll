@@ -4,10 +4,7 @@ export interface EmailOptions {
   html: string;
 }
 
-/**
- * EmailService handles the generation and sending of transactional emails.
- * It provides templates for security alerts, password resets, and invitations.
- */
+
 export class EmailService {
   private static readonly FROM_EMAIL = process.env.EMAIL_FROM || "noreply@vestroll.com";
   private static readonly APP_NAME = "VestRoll";

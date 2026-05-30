@@ -15,5 +15,5 @@ export function updateLastActive(userId: string): void {
   db.update(users)
     .set({ lastActiveAt: new Date() })
     .where(eq(users.id, userId))
-    .catch(() => cache.delete(userId)); // retry next request on failure
+    .catch(() => cache.delete(userId)); 
 }

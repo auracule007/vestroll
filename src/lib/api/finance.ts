@@ -1,4 +1,46 @@
 import { apiClient } from "../api-client";
+import { Contract } from "@/lib/data/contracts";
+import { Invoice } from "@/lib/data/invoices";
+
+
+
+export interface WalletFundingDetails {
+  walletId: string | null;
+  organizationId: string | null;
+  virtualAccountNumber: string | null;
+  virtualBankName: string | null;
+  hasVirtualAccount: boolean;
+}
+
+
+
+export interface FiatBalanceResponse {
+  balance: number; 
+}
+
+
+
+export interface TransactionMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface TransactionRecord {
+  id: string;
+  type?: string;
+  description?: string;
+  amount: string;
+  asset?: string;
+  status: string;
+  timestamp: string;
+}
+
+export interface TransactionsPage {
+  data: TransactionRecord[];
+  meta: TransactionMeta;
+}
 
 export interface PayrollEmployee {
   id: string;
@@ -38,35 +80,6 @@ export interface RunPayrollInput {
   providerId?: "monnify" | "flutterwave";
 }
 
-export class FinanceService {
-  static async getPendingPayroll(): Promise<PayrollItem[]> {
-    return apiClient.get<PayrollItem[]>("/api/v1/finance/payroll");
-  }
-
-  static async submitPayroll(data: RunPayrollInput): Promise<RunPayrollResponse> {
-    return apiClient.post<RunPayrollResponse>("/api/v1/finance/payroll", data);
-import { Contract } from "@/lib/data/contracts";
-import { Invoice } from "@/lib/data/invoices";
-
-export class FinanceService {
-  static async getContracts(): Promise<Contract[]> {
-    const res = await fetch("/api/v1/finance/contracts", {
-      credentials: "include",
-    });
-    if (!res.ok) throw new Error("Failed to fetch contracts");
-    const json = await res.json();
-    return json.data ?? [];
-  }
-
-  static async getInvoices(): Promise<Invoice[]> {
-    const res = await fetch("/api/v1/finance/invoices", {
-      credentials: "include",
-    });
-    if (!res.ok) throw new Error("Failed to fetch invoices");
-    const json = await res.json();
-    return json.data ?? [];
-import { apiClient } from "../api-client";
-
 interface DepositRequest {
   amount: number;
   provider?: "monnify" | "flutterwave";
@@ -85,7 +98,45 @@ interface DepositResponse {
 }
 
 export class FinanceService {
+  static async getPendingPayroll(): Promise<PayrollItem[]> {
+    return apiClient.get<PayrollItem[]>("/api/v1/finance/payroll");
+  }
+
+  static async submitPayroll(data: RunPayrollInput): Promise<RunPayrollResponse> {
+    return apiClient.post<RunPayrollResponse>("/api/v1/finance/payroll", data);
+  }
+
+  static async getContracts(): Promise<Contract[]> {
+    return apiClient.get<Contract[]>("/api/v1/finance/contracts");
+  }
+
+  static async getInvoices(): Promise<Invoice[]> {
+    return apiClient.get<Invoice[]>("/api/v1/finance/invoices");
+  }
+
   static async initializeDeposit(request: DepositRequest): Promise<DepositResponse> {
     return apiClient.post<DepositResponse>("/api/v1/finance/fiat/deposit", request);
+  }
+
+  
+  static async getWallet(): Promise<WalletFundingDetails> {
+    return apiClient.get<WalletFundingDetails>("/api/v1/finance/wallet");
+  }
+
+  
+  static async refreshWallet(): Promise<WalletFundingDetails> {
+    return apiClient.post<WalletFundingDetails>("/api/v1/finance/wallet");
+  }
+
+  
+  static async getBalance(): Promise<FiatBalanceResponse> {
+    return apiClient.get<FiatBalanceResponse>("/api/v1/finance/balance");
+  }
+
+  
+  static async getTransactions(page = 1, limit = 10): Promise<TransactionsPage> {
+    return apiClient.get<TransactionsPage>(
+      `/api/v1/finance/transactions?page=${page}&limit=${limit}`
+    );
   }
 }

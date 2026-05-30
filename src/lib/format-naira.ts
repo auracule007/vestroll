@@ -1,9 +1,4 @@
-/**
- * Formats a balance from kobo (smallest unit) to Naira (NGN) currency string.
- *
- * @param kobo - The amount in kobo (bigint or number). Defaults to 0 if null/undefined.
- * @returns Formatted currency string, e.g. "₦1,234.56"
- */
+
 export function formatNairaFromKobo(
   kobo: bigint | number | null | undefined,
 ): string {

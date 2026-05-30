@@ -23,17 +23,17 @@ describe("prune-logs.job", () => {
       const cutoffDate = getCutoffDate();
       const now = new Date();
       
-      // Calculate expected cutoff
+      
       const expected = new Date(now.getTime());
       expected.setDate(expected.getDate() - LOGIN_ATTEMPTS_RETENTION_DAYS);
       
-      // Allow for small differences due to execution time
+      
       const diffInMs = Math.abs(cutoffDate.getTime() - expected.getTime());
-      expect(diffInMs).toBeLessThan(1000); // Within 1 second
+      expect(diffInMs).toBeLessThan(1000); 
     });
 
     it("should calculate correct cutoff for different retention periods", () => {
-      // Test with the constant
+      
       const expectedDays = 30;
       expect(LOGIN_ATTEMPTS_RETENTION_DAYS).toBe(expectedDays);
     });
@@ -71,10 +71,10 @@ describe("prune-logs.job", () => {
       const mockWhere = vi.fn().mockReturnValue({ returning: mockReturning });
       (db.delete as any).mockReturnValue({ where: mockWhere });
 
-      // Capture the where clause argument
+      
       await pruneLoginAttempts();
 
-      // Verify where was called with a valid condition
+      
       expect(mockWhere).toHaveBeenCalled();
     });
   });

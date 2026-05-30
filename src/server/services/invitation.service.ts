@@ -1,6 +1,6 @@
 import { db } from "../db";
 import { organizationInvitations, users, organizations } from "../db/schema";
-import { eq, and, desc, lt } from "drizzle-orm";
+import { eq, and, desc, lt, count } from "drizzle-orm";
 import crypto from "crypto";
 import { addDays, isPast } from "date-fns";
 import type { SQL } from "drizzle-orm";
@@ -52,7 +52,7 @@ class InvitationService {
   async createInvitation(
     data: CreateInvitationData,
   ): Promise<InvitationWithDetails> {
-    // Check if user already exists in organization
+    
     const existingUser = await db
       .select()
       .from(users)
@@ -68,7 +68,7 @@ class InvitationService {
       throw new Error("User already exists in this organization");
     }
 
-    // Check if there's already a pending invitation
+    
     const existingInvitation = await db
       .select()
       .from(organizationInvitations)
@@ -85,11 +85,11 @@ class InvitationService {
       throw new Error("Pending invitation already exists for this email");
     }
 
-    // Generate invitation token
+    
     const token = crypto.randomBytes(32).toString('hex');
-    const expiresAt = addDays(new Date(), 7); // 7 days expiry
+    const expiresAt = addDays(new Date(), 7); 
 
-    // Create invitation
+    
     const [invitation] = await db
       .insert(organizationInvitations)
       .values({
@@ -103,13 +103,13 @@ class InvitationService {
       })
       .returning();
 
-    // Get invitation with details
+    
     const invitationWithDetails = await this.getInvitationById(invitation.id);
     if (!invitationWithDetails) {
       throw new Error("Failed to retrieve created invitation");
     }
 
-    // Send invitation email
+    
     await EmailService.sendInvitationEmail({
       to: data.email,
       organizationName: invitationWithDetails.organization.name,
@@ -263,13 +263,15 @@ class InvitationService {
       .limit(limit)
       .offset(offset);
 
-    // Get total count
-    const [{ count }] = await db
-      .select({ count: organizationInvitations.id })
+    
+    const [countResult] = await db
+      .select({ value: count() })
       .from(organizationInvitations)
       .where(and(...whereConditions));
 
-    return toPaginatedResponse(invitations, page, limit, Number(count));
+    const total = countResult?.value ?? 0;
+
+    return toPaginatedResponse(invitations, page, limit, Number(total));
   }
 
   async acceptInvitation(token: string, userId: string): Promise<void> {
@@ -288,10 +290,10 @@ class InvitationService {
       throw new Error("Invitation has expired");
     }
 
-    // Update invitation status
+    
     await this.updateInvitationStatus(invitation.id, "accepted");
 
-    // Update user's organization and role
+    
     await db
       .update(users)
       .set({
@@ -334,7 +336,7 @@ class InvitationService {
       throw new Error("Can only resend pending invitations");
     }
 
-    // Generate new token and extend expiry
+    
     const newToken = crypto.randomBytes(32).toString('hex');
     const newExpiresAt = addDays(new Date(), 7);
 
@@ -347,7 +349,7 @@ class InvitationService {
       })
       .where(eq(organizationInvitations.id, invitationId));
 
-    // Send new invitation email
+    
     await EmailService.sendInvitationEmail({
       to: invitation.email,
       organizationName: invitation.organization.name,

@@ -1,4 +1,4 @@
-// components/StatusBadge.tsx
+
 
 import React from "react";
 import { TransactionStatus } from "./types";
@@ -14,19 +14,19 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
 
   switch (status) {
     case "Successful":
-      // Green color for success
+      
       bgColorClass = "bg-[#EDFEEC]";
       textColorClass = "text-[#26902B]";
       borderColorClass = "border-[#26902B]";
       break;
     case "Pending":
-      // Yellow/Amber color for pending
+      
       bgColorClass = "bg-[#FEF7EB]";
       textColorClass = "text-[#E79A23]";
       borderColorClass = "border-[#E79A23]";
       break;
     case "Failed":
-      // Red color for failed
+      
       bgColorClass = "bg-[#FEECEC]";
       textColorClass = "text-[#C64242]";
       borderColorClass = "border-[#C64242]";

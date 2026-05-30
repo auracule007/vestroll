@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
       throw new AppError(`Invitation is ${invitation.status}`, 400);
     }
 
-    // Check if invitation has expired
+    
     if (new Date() > new Date(invitation.expiresAt)) {
       await invitationService.updateInvitationStatus(invitation.id, "expired");
       throw new AppError("Invitation has expired", 400);

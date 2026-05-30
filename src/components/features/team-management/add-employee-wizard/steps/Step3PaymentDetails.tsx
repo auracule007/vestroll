@@ -22,8 +22,9 @@ import {
   ContactRound,
 } from "lucide-react";
 import { BankDetailsData } from "../types";
+import { EmployeesService } from "@/lib/api/employees";
 
-// ─── Schema ──────────────────────────────────────────────────────────────────
+
 
 const schema = z.object({
   bankName: z.string().min(1, "Bank name is required"),
@@ -37,7 +38,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-// ─── Nigerian banks list (common subset) ─────────────────────────────────────
+
 
 const BANK_OPTIONS = [
   "Access Bank",
@@ -61,7 +62,7 @@ const BANK_OPTIONS = [
   "Other",
 ];
 
-// ─── Verification state type ──────────────────────────────────────────────────
+
 
 type VerificationState =
   | { status: "idle" }
@@ -69,7 +70,7 @@ type VerificationState =
   | { status: "success"; accountName: string }
   | { status: "error"; message: string };
 
-// ─── Props ────────────────────────────────────────────────────────────────────
+
 
 interface Props {
   defaultValues: BankDetailsData;
@@ -77,7 +78,7 @@ interface Props {
   onBack: () => void;
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+
 
 export function Step3PaymentDetails({ defaultValues, onNext, onBack }: Props) {
   const [verification, setVerification] = useState<VerificationState>({
@@ -103,7 +104,7 @@ export function Step3PaymentDetails({ defaultValues, onNext, onBack }: Props) {
   const selectedBank = watch("bankName");
   const accountNumber = watch("accountNumber");
 
-  // ── Account verification ────────────────────────────────────────────────────
+  
   const verifyAccount = async () => {
     const valid = await trigger(["bankName", "accountNumber"]);
     if (!valid) return;
@@ -111,18 +112,14 @@ export function Step3PaymentDetails({ defaultValues, onNext, onBack }: Props) {
     setVerification({ status: "loading" });
 
     try {
-      const res = await fetch("/api/v1/accounts/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bankName: selectedBank, accountNumber }),
+      const result = await EmployeesService.validateAccount({
+        bankName: selectedBank,
+        accountNumber,
       });
-      const json = await res.json();
-
-      if (!res.ok) throw new Error(json.message || "Verification failed");
 
       const resolvedName: string =
-        json.data?.accountHolderName ||
-        json.data?.accountName ||
+        result.accountHolderName ||
+        result.accountName ||
         "Account Verified";
 
       setValue("accountName", resolvedName);
@@ -136,7 +133,7 @@ export function Step3PaymentDetails({ defaultValues, onNext, onBack }: Props) {
     }
   };
 
-  // ── Submit ──────────────────────────────────────────────────────────────────
+  
   const onSubmit = (values: FormValues) => {
     onNext({
       bankName: values.bankName,

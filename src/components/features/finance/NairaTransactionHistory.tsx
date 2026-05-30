@@ -7,7 +7,7 @@ import { formatDate } from "@/utils/date"
 interface FiatTransaction {
   id: string;
   type: "deposit" | "withdrawal" | "payout";
-  amount: number; // kobo
+  amount: number; 
   status: "pending" | "completed" | "failed";
   provider: string;
   providerReference: string;
@@ -71,9 +71,10 @@ const MOCK_FIAT_TXS: FiatTransaction[] = [
   },
 ]; 
 
+import { formatNairaFromKobo } from "@/lib/format-naira";
+
 function formatNgn(kobo: number): string {
-  return 
-    (kobo, { currency: "NGN" });
+  return formatNairaFromKobo(kobo);
 }
 
 function statusBadge(status: FiatTransaction["status"]) {
@@ -104,7 +105,7 @@ export default function NairaTransactionHistory() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // In production this would be a fetch to /api/v1/finance/ngn/transactions
+    
     const timer = setTimeout(() => {
       setTransactions(MOCK_FIAT_TXS);
       setIsLoading(false);

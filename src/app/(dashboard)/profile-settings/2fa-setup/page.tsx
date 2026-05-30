@@ -23,9 +23,9 @@ export default function FaSetupPage() {
 
   const handleContinue = () => {
     if (selectedMethod === "authenticator") {
-      router.push("/app/profile-settings/2fa-setup/qr-code");
+      router.push("/profile-settings/2fa-setup/qr-code");
     } else if (selectedMethod === "email") {
-      router.push("/app/profile-settings/2fa-setup/email-verify");
+      router.push("/profile-settings/2fa-setup/email-verify");
     }
   };
 

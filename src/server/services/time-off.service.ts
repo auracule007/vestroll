@@ -6,13 +6,13 @@ import { EmailService } from "./email.service";
 import { Logger } from "./logger.service";
 
 interface CreateTimeOffInput {
-  /** Authenticated user's ID (used to look up their employee record) */
+  
   userId: string;
-  /** Override: admin submitting on behalf of a specific employee */
+  
   employeeId?: string;
   type: "paid" | "unpaid";
-  startDate: string; // YYYY-MM-DD
-  endDate: string;   // YYYY-MM-DD
+  startDate: string; 
+  endDate: string;   
   reason: string;
 }
 
@@ -165,7 +165,7 @@ export class TimeOffService {
   static async createTimeOffRequest(
     input: CreateTimeOffInput,
   ): Promise<CreateTimeOffResult> {
-    // 1. Resolve the actor's organisation
+    
     const [user] = await db
       .select({ organizationId: users.organizationId })
       .from(users)
@@ -176,11 +176,11 @@ export class TimeOffService {
       throw new ForbiddenError("User is not associated with any organization");
     }
 
-    // 2. Resolve the employee record
+    
     let resolvedEmployeeId: string;
 
     if (input.employeeId) {
-      // Admin specified an explicit employee — verify they belong to the same org
+      
       const [emp] = await db
         .select({ id: employees.id })
         .from(employees)
@@ -199,7 +199,7 @@ export class TimeOffService {
       }
       resolvedEmployeeId = emp.id;
     } else {
-      // Self-submission: look up employee by userId
+      
       const [emp] = await db
         .select({ id: employees.id })
         .from(employees)
@@ -219,7 +219,7 @@ export class TimeOffService {
       resolvedEmployeeId = emp.id;
     }
 
-    // 3. Validate dates
+    
     const start = new Date(input.startDate);
     const end = new Date(input.endDate);
 
@@ -231,11 +231,11 @@ export class TimeOffService {
       throw new BadRequestError("endDate must be on or after startDate");
     }
 
-    // Inclusive day count
+    
     const totalDuration =
       Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 
-    // 4. Insert
+    
     const [created] = await db
       .insert(timeOffRequests)
       .values({

@@ -5,7 +5,7 @@ import { ForbiddenError } from "../utils/errors";
 import { GetEmployeesQuery } from "../validations/employee.schema";
 import { PaginatedResponse, toPaginatedResponse } from "@/types/pagination";
 
-/** Shape of an employee object in API responses */
+
 export interface EmployeeItem {
   id: string;
   name: string;

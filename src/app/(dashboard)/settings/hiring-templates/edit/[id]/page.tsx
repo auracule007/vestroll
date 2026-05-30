@@ -55,7 +55,7 @@ export default function EditTemplatePage() {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const editorRef = useRef<HTMLDivElement>(null);
 
-  // Load template data
+  
   useEffect(() => {
     const savedTemplates = localStorage.getItem("hiringTemplates");
     console.log("localStorage contents:", savedTemplates);
@@ -68,7 +68,7 @@ export default function EditTemplatePage() {
     if (savedTemplates) {
       templates = JSON.parse(savedTemplates);
     } else {
-      // Fallback to initial mock data
+      
       templates = [
         {
           id: 1,
@@ -110,12 +110,12 @@ export default function EditTemplatePage() {
         }
       }, 100);
     } else {
-      router.push("/app/settings/hiring-templates");
+      router.push("/settings/hiring-templates");
     }
     setIsLoading(false);
   }, [templateId, router]);
 
-  // Rich text editor functions
+  
   const execCommand = (command: string, value?: string): void => {
     document.execCommand(command, false, value || "");
     editorRef.current?.focus();
@@ -158,10 +158,10 @@ export default function EditTemplatePage() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
+      
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Update template in localStorage
+      
       const savedTemplates = localStorage.getItem("hiringTemplates");
       if (savedTemplates) {
         const templates: Template[] = JSON.parse(savedTemplates);
@@ -177,8 +177,8 @@ export default function EditTemplatePage() {
       console.log("Template updated:", formData);
       alert("Template updated successfully!");
 
-      // Redirect back to templates list
-      router.push("/app/settings/");
+      
+      router.push("/settings/");
     } catch (error) {
       console.error("Error updating template:", error);
       alert("Error updating template. Please try again.");
@@ -188,7 +188,7 @@ export default function EditTemplatePage() {
   };
 
   const handleBack = (): void => {
-    router.push("/app/settings");
+    router.push("/settings");
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,10 +207,10 @@ export default function EditTemplatePage() {
     setIsDeleting(true);
 
     try {
-      // Simulate API call
+      
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Delete template from localStorage
+      
       const savedTemplates = localStorage.getItem("hiringTemplates");
       if (savedTemplates) {
         const templates: Template[] = JSON.parse(savedTemplates);
@@ -224,8 +224,8 @@ export default function EditTemplatePage() {
       console.log("Template deleted:", templateId);
       alert("Template deleted successfully!");
 
-      // Redirect back to templates list
-      router.push("/app/settings/hiring-templates");
+      
+      router.push("/settings/hiring-templates");
     } catch (error) {
       console.error("Error deleting template:", error);
       alert("Error deleting template. Please try again.");
@@ -297,7 +297,7 @@ export default function EditTemplatePage() {
           <div className="flex items-center space-x-4 mr-10">
             <button
               type="button"
-              //onClick={()=>()}
+              
               className="flex items-center px-6 py-3 text-white rounded-full bg-purple-700 transition-colors"
             >
               <Pencil className="w-5 h-5" />

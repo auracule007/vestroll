@@ -34,10 +34,7 @@ const buttonVariants = cva(
   }
 );
 
-/**
- * Standard utility-first Button component with support for multiple variants and sizes.
- * Built using class-variance-authority for type-safe styles.
- */
+
 function Button({
   className,
   variant,

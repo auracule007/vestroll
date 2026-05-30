@@ -2,6 +2,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 import { AppError } from "../utils/errors";
+import { Logger } from "./logger.service";
 import { KYB_FILE_CONSTRAINTS } from "../validations/kyb.schema";
 
 const S3_CONFIG = {
@@ -13,7 +14,7 @@ const S3_CONFIG = {
 };
 
 const BUCKET_NAME = process.env.AWS_S3_BUCKET || "vestroll-assets";
-const SIGNED_URL_EXPIRY = 300; // 5 minutes
+const SIGNED_URL_EXPIRY = 300; 
 
 export interface SignedUploadUrl {
   signedUrl: string;
@@ -42,8 +43,8 @@ export class KybUploadService {
     filename: string,
     contentType: string,
   ): Promise<SignedUploadUrl> {
-    // Validate content type
-    if (!KYB_FILE_CONSTRAINTS.allowedMimeTypes.includes(contentType as any)) {
+    
+    if (!(KYB_FILE_CONSTRAINTS.allowedMimeTypes as readonly string[]).includes(contentType)) {
       throw new AppError(
         `Invalid content type. Allowed: ${KYB_FILE_CONSTRAINTS.allowedMimeTypes.join(", ")}`,
         400,
@@ -55,7 +56,7 @@ export class KybUploadService {
       throw new AppError("File must have an extension", 400);
     }
 
-    // Generate unique key: kyb/{userId}/{uuid}.{ext}
+    
     const uniqueId = crypto.randomUUID();
     const key = `kyb/${userId}/${uniqueId}.${extension}`;
 
@@ -95,7 +96,7 @@ export class KybUploadService {
       });
       await this.getS3Client().send(command);
     } catch (error) {
-      console.error(`Failed to delete S3 object: ${key}`, error);
+      Logger.error(`Failed to delete S3 object: ${key}`, { error: error instanceof Error ? error.message : String(error) });
     }
   }
 }

@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
 import OnboardingCheckList from "@/components/features/dashboard/home/OnboardingCheckList";
 import RequiringAttention from "@/components/features/dashboard/home/RequiringAttention";
 import QuickAction from "@/components/features/dashboard/home/QuickAction";
 import { motion, Variants } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import avatar from "@/../public/avatar/avatar.png";
 import { KybService } from "@/lib/api/kyb";
 import type { KybVerificationStatus } from "@/types/kyb";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -20,7 +20,7 @@ const itemVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
-// Terminal statuses that stop polling
+
 const TERMINAL_STATUSES: KybVerificationStatus["status"][] = [
   "verified",
   "approved",
@@ -35,6 +35,7 @@ export default function DashboardPage() {
 
   const user = {
     name: "Peter",
+    firstName: "Peter",
     email: "peter@vestroll.com",
     userType: "Administrator",
     avatar: avatar,
@@ -52,25 +53,25 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    // Initial fetch
+    
     fetchKybStatus();
   }, []);
 
   useEffect(() => {
-    // Start polling when status is pending
+    
     if (kybStatus?.status === "pending" && !pollingRef.current) {
       pollingRef.current = true;
-      // Start first poll immediately, then schedule subsequent polls
+      
       const poll = async () => {
         if (!pollingRef.current || !isMountedRef.current) return;
 
         const status = await fetchKybStatus();
 
-        // Continue polling only if status is still pending and component is mounted
+        
         if (status?.status === "pending" && pollingRef.current && isMountedRef.current) {
           timeoutRef.current = setTimeout(poll, 5000);
         } else if (status) {
-          // Terminal state reached - stop polling
+          
           pollingRef.current = false;
           if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
@@ -81,7 +82,7 @@ export default function DashboardPage() {
       poll();
     }
 
-    // Cleanup on unmount or status change
+    
     return () => {
       pollingRef.current = false;
       isMountedRef.current = false;
@@ -91,7 +92,7 @@ export default function DashboardPage() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array - polling is controlled via refs
+  }, []); 
 
   const renderKybBanner = () => {
     if (!kybStatus || kybStatus.status === "not_started") return null;

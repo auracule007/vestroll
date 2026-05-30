@@ -1,6 +1,20 @@
 import { apiClient } from "../api-client";
 import { CreateInvitationInput, ResendInvitationInput, ListInvitationsInput } from "@/server/validations/invitation.schema";
 
+export interface AcceptInvitationPayload {
+  token: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+}
+
+export interface TimeOffPayload {
+  startDate: string;
+  endDate: string;
+  leaveType: string;
+  reason: string;
+  employeeId?: string;
+}
 export class TeamService {
   static async listInvitations(params?: ListInvitationsInput) {
     let url = "/api/v1/invitations";
@@ -25,5 +39,25 @@ export class TeamService {
 
   static async getTeamMembers() {
     return apiClient.get("/api/v1/team/members");
+  }
+
+  
+  static async validateInvitation(token: string) {
+    return apiClient.get(`/api/v1/invitations/validate?token=${encodeURIComponent(token)}`);
+  }
+
+  
+  static async acceptInvitation(payload: AcceptInvitationPayload) {
+    return apiClient.post("/api/v1/invitations/accept", payload);
+  }
+
+  
+  static async declineInvitation(token: string) {
+    return apiClient.post("/api/v1/invitations/decline", { token });
+  }
+
+  
+  static async submitTimeOff(payload: TimeOffPayload) {
+    return apiClient.post("/api/v1/team/time-off", payload);
   }
 }

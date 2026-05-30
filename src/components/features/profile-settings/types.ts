@@ -50,6 +50,6 @@ export interface ImageUploadModalProps {
   onClose: () => void;
   onSave: (imageFile: File) => void;
   currentImage?: string;
-  /** Preview/crop shape. "circle" (default) for profile photos; "square" for logos (1:1). */
+  
   shape?: "circle" | "square";
 }

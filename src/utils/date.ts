@@ -1,9 +1,6 @@
 import { format, formatDistanceToNow, isValid, parseISO } from "date-fns";
 
-/**
- * Format a date string or Date object to a consistent human-readable format.
- * Format: "MMM dd, yyyy" (e.g., "Apr 26, 2026")
- */
+
 export function formatDate(dateInput: string | Date | null | undefined): string {
   if (!dateInput) return "";
   
@@ -26,10 +23,7 @@ export function formatDate(dateInput: string | Date | null | undefined): string 
   }
 }
 
-/**
- * Format a date string or Date object to include both date and time.
- * Format: "MMM dd, yyyy HH:mm" (e.g., "Apr 26, 2026 14:30")
- */
+
 export function formatDateTime(dateInput: string | Date | null | undefined): string {
   if (!dateInput) return "";
   
@@ -52,10 +46,7 @@ export function formatDateTime(dateInput: string | Date | null | undefined): str
   }
 }
 
-/**
- * Format a date range with two dates.
- * Format: "MMM dd, yyyy - MMM dd, yyyy" (e.g., "Apr 20, 2026 - Apr 26, 2026")
- */
+
 export function formatDateRange(
   startDate: string | Date | null | undefined,
   endDate: string | Date | null | undefined
@@ -68,10 +59,7 @@ export function formatDateRange(
   return `${start} - ${end}`;
 }
 
-/**
- * Format a date relative to now using distance formatting.
- * Format: "2 hours ago", "in 3 days", "just now", etc.
- */
+
 export function formatRelativeDate(dateInput: string | Date | null | undefined): string {
   if (!dateInput) return "";
   
@@ -94,10 +82,7 @@ export function formatRelativeDate(dateInput: string | Date | null | undefined):
   }
 }
 
-/**
- * Format a date with a custom format string.
- * Uses date-fns format tokens: https://date-fns.org/docs/format
- */
+
 export function formatDateCustom(
   dateInput: string | Date | null | undefined,
   formatStr: string
@@ -123,10 +108,7 @@ export function formatDateCustom(
   }
 }
 
-/**
- * Format a date string or Date object in locale-specific format (en-NG for Nigerian locale).
- * Format: "day numeric month short year numeric" (e.g., "26 Apr 2026")
- */
+
 export function formatDateLocale(
   dateInput: string | Date | null | undefined,
   locale: string = "en-NG"

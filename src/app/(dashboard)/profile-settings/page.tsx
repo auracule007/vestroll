@@ -1,4 +1,4 @@
-// app/settings/page.tsx (or wherever your main file is)
+
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -83,7 +83,7 @@ export default function Page() {
       <header className="bg-white border-b border-[#DCE0E5]">
         <div className="px-4 sm:px-6 py-2">
           <button
-            onClick={() => router.push("/app/dashboard")}
+            onClick={() => router.push("/dashboard")}
             className="text-gray-900 text-sm hover:text-gray-600 transition-colors"
           >
             ← Back to dashboard
@@ -129,7 +129,7 @@ export default function Page() {
   );
 }
 
-// Settings Content Component
+
 function Settings() {
   const router = useRouter();
   const [profImage, setProfImage] = useState<string | null>(null);
@@ -141,7 +141,7 @@ function Settings() {
     const imageUrl = URL.createObjectURL(file);
     setProfImage(imageUrl);
 
-    // Simulate API call
+    
     console.log("Uploading image:", file.name);
   };
 
@@ -220,7 +220,7 @@ function Settings() {
           title="General"
           action={
             <button
-              onClick={() => router.push("/app/profile-settings/edit-profile")}
+              onClick={() => router.push("/profile-settings/edit-profile")}
               className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium text-[#5E2A8C] border-[#5E2A8C] hover:bg-purple-300 hover:text-purple-950 active:bg-[#5E2A8C] transition-colors"
               type="button"
               aria-label="Edit company information"
@@ -266,7 +266,7 @@ function Settings() {
               </p>
             </div>
             <button
-              onClick={() => router.push("/app/profile-settings/2fa-setup")}
+              onClick={() => router.push("/profile-settings/2fa-setup")}
               className="flex items-center gap-2 px-4 py-2 text-purple-900 rounded-full border border-purple-900 hover:bg-purple-600 hover:text-white transition-colors"
             >
               <Settings2 />

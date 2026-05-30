@@ -30,7 +30,7 @@ const ForgotPasswordForm: React.FC = () => {
   const onSubmit = async (data: ForgotPasswordFormData) => {
     try {
       await forgotPassword(data.email);
-      // for now just navigate to otp page
+      
       success("Reset link sent to your email");
       router.push("verify-otp");
     } catch (err) {

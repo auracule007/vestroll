@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, CheckCircle, XCircle, AlertCircle, Building, CreditCard, Globe } from "lucide-react";
+import { EmployeesService } from "@/lib/api/employees";
 
 const accountFormSchema = z.object({
   bankName: z.string().min(2, "Bank name is required").max(255),
@@ -117,7 +118,7 @@ export function AccountForm({ employeeId, initialData, onSubmit, onCancel }: Acc
   const selectedCountry = watch("bankCountry");
   const selectedCountryInfo = countryOptions.find(c => c.value === selectedCountry);
 
-  // Auto-validate when required fields change
+  
   useEffect(() => {
     const requiredField = selectedCountryInfo?.requires;
     const fieldValue = watch(requiredField as any);
@@ -142,20 +143,8 @@ export function AccountForm({ employeeId, initialData, onSubmit, onCancel }: Acc
 
     try {
       const formData = watch();
-      const response = await fetch("/api/v1/accounts/validate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Validation failed");
-      }
-
-      setValidationResult(data.data);
+      const result = await EmployeesService.validateAccount(formData as any);
+      setValidationResult(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Account validation failed");
       setValidationResult(null);

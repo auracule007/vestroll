@@ -8,7 +8,7 @@ export default function WithdrawalDetailsModal() {
   const [copiedTx, setCopiedTx] = useState(false);
   const [copiedDate, setCopiedDate] = useState(false);
 
-  // Demo transaction data
+  
   const transaction = {
     amount: "-581 USDT",
     usdValue: "$ 576.19",

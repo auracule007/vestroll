@@ -11,6 +11,7 @@ interface FileUploadProps {
   className?: string;
   isUploading?: boolean;
   uploadProgress?: number;
+  error?: string;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({
@@ -22,6 +23,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   className = "",
   isUploading = false,
   uploadProgress = 0,
+  error,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const componentId = label.replace(/\s+/g, "-").toLowerCase();
@@ -53,7 +55,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const handleFileSelect = (selectedFile: File) => {
-    // Validate file size
+    
     if (selectedFile.size > maxSize * 1024 * 1024) {
       alert(`File size must be less than ${maxSize}MB`);
       return;
@@ -73,7 +75,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       </label>
 
       {file ? (
-        // File uploaded state - show file info with loading or completed state
+        
         <div className="border border-[#DCE0E5] rounded-[8px] px-4 py-4 bg-white dark:bg-gray-900 dark:border-gray-700">
           <div className="flex items-center gap-x-4">
             {/* File Icon */}
@@ -280,6 +282,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
           className="hidden"
           id={`file-${componentId}`}
         />
+      )}
+
+      {error && (
+        <p className="mt-2 text-sm text-red-600 font-medium">
+          {error}
+        </p>
       )}
     </div>
   );

@@ -79,7 +79,7 @@ export class RateLimitService {
 
   private static readonly kybRateLimits = new Map<string, { count: number; resetTime: number }>();
   private static readonly KYB_MAX_REQUESTS = 10;
-  private static readonly KYB_WINDOW_MS = 60 * 1000; // 1 minute for rapid testing
+  private static readonly KYB_WINDOW_MS = 60 * 1000; 
 
   static async isKybRateLimited(identifier: string): Promise<boolean> {
     const now = Date.now();

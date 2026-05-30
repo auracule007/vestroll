@@ -26,7 +26,7 @@ export function FeedbackWidget() {
     if (!message.trim()) {
       return;
     }
-    // Simulate sending feedback
+    
     console.log("Feedback sent:", { type: feedbackType, message });
     setMessage("");
     setIsOpen(false);

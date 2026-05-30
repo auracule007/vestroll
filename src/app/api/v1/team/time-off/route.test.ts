@@ -8,7 +8,7 @@ import { UnauthorizedError, ForbiddenError, NotFoundError } from "@/server/utils
 vi.mock("@/server/services/time-off.service");
 vi.mock("@/server/utils/auth");
 
-// ─── Shared helpers ───────────────────────────────────────────────────────────
+
 
 const BASE_URL = "http://localhost:3000/api/v1/team/time-off";
 
@@ -22,7 +22,7 @@ const makePostRequest = (body: unknown): NextRequest =>
         body: JSON.stringify(body),
     });
 
-// ─── GET tests ────────────────────────────────────────────────────────────────
+
 
 describe("GET /api/v1/team/time-off", () => {
     beforeEach(() => {
@@ -96,7 +96,7 @@ describe("GET /api/v1/team/time-off", () => {
     });
 });
 
-// ─── POST tests ───────────────────────────────────────────────────────────────
+
 
 const VALID_BODY = {
     startDate: "2025-07-01",

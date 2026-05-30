@@ -2,11 +2,16 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { POST } from "./route";
 import { NextRequest } from "next/server";
 import { KybService } from "@/server/services/kyb.service";
+import { KybUploadService } from "@/server/services/kyb-upload.service";
 import { AuthUtils } from "@/server/utils/auth";
 import { ConflictError, UnauthorizedError } from "@/server/utils/errors";
 
 vi.mock("@/server/services/kyb.service");
+vi.mock("@/server/services/kyb-upload.service");
 vi.mock("@/server/utils/auth");
+vi.mock("@/server/services/rate-limit.service", () => ({
+  withKybRateLimit: (handler: any) => handler,
+}));
 
 describe("POST /api/v1/kyb/submit", () => {
   beforeEach(() => {
@@ -18,32 +23,16 @@ describe("POST /api/v1/kyb/submit", () => {
       user: { id: "user-123", email: "test@example.com" },
     } as never);
 
-    vi.mocked(KybService.uploadToCloudinary).mockResolvedValue({
-      publicId: "kyb/user-123/file-uuid",
-      secureUrl: "https://res.cloudinary.com/demo/raw/upload/kyb/user-123/file-uuid.pdf",
-    });
-
-    vi.mocked(KybService.deleteFromCloudinary).mockResolvedValue(undefined);
+    vi.mocked(KybUploadService.getPublicUrl).mockReturnValue(
+      "https://example.com/mock-url"
+    );
   });
 
-  const createMockFile = (
-    name: string,
-    size = 1024,
-    type = "application/pdf",
-  ): File => {
-    const buffer = new ArrayBuffer(size);
-    return new File([buffer], name, { type });
-  };
-
-  const createMockFormDataRequest = (
-    fields: Record<string, string | File>,
+  const createMockJsonRequest = (
+    body: Record<string, string | undefined>
   ): NextRequest => {
-    const formData = new FormData();
-    for (const [key, value] of Object.entries(fields)) {
-      formData.append(key, value);
-    }
     return {
-      formData: async () => formData,
+      json: async () => body,
       headers: new Headers({ Authorization: "Bearer mock-token" }),
     } as unknown as NextRequest;
   };
@@ -58,11 +47,11 @@ describe("POST /api/v1/kyb/submit", () => {
     };
     vi.mocked(KybService.submit).mockResolvedValue(mockResult);
 
-    const req = createMockFormDataRequest({
+    const req = createMockJsonRequest({
       registrationType: "Corporation",
       registrationNo: "REG-001",
-      incorporationCertificate: createMockFile("cert.pdf"),
-      memorandumArticle: createMockFile("memo.pdf"),
+      incorporationCertificatePath: "path/to/cert.pdf",
+      memorandumArticlePath: "path/to/memo.pdf",
     });
 
     const response = await POST(req);
@@ -73,11 +62,10 @@ describe("POST /api/v1/kyb/submit", () => {
     expect(data.message).toBe("KYB documents submitted successfully");
     expect(data.data.id).toBe("kyb-123");
     expect(data.data.status).toBe("pending");
-    expect(KybService.uploadToCloudinary).toHaveBeenCalledTimes(2);
     expect(KybService.submit).toHaveBeenCalledOnce();
   });
 
-  it("should accept optional formC02C07 file", async () => {
+  it("should accept optional formC02C07 path", async () => {
     const mockResult = {
       id: "kyb-456",
       status: "pending" as const,
@@ -87,30 +75,30 @@ describe("POST /api/v1/kyb/submit", () => {
     };
     vi.mocked(KybService.submit).mockResolvedValue(mockResult);
 
-    const req = createMockFormDataRequest({
+    const req = createMockJsonRequest({
       registrationType: "Corporation",
       registrationNo: "REG-002",
-      incorporationCertificate: createMockFile("cert.pdf"),
-      memorandumArticle: createMockFile("memo.pdf"),
-      formC02C07: createMockFile("form.pdf"),
+      incorporationCertificatePath: "path/to/cert.pdf",
+      memorandumArticlePath: "path/to/memo.pdf",
+      formC02C07Path: "path/to/form.pdf",
     });
 
     const response = await POST(req);
 
     expect(response.status).toBe(201);
-    expect(KybService.uploadToCloudinary).toHaveBeenCalledTimes(3);
+    expect(KybService.submit).toHaveBeenCalledOnce();
   });
 
   it("should return 401 when not authenticated", async () => {
     vi.mocked(AuthUtils.authenticateRequest).mockRejectedValue(
-      new UnauthorizedError("Authentication required"),
+      new UnauthorizedError("Authentication required")
     );
 
-    const req = createMockFormDataRequest({
+    const req = createMockJsonRequest({
       registrationType: "Corporation",
       registrationNo: "REG-001",
-      incorporationCertificate: createMockFile("cert.pdf"),
-      memorandumArticle: createMockFile("memo.pdf"),
+      incorporationCertificatePath: "path/to/cert.pdf",
+      memorandumArticlePath: "path/to/memo.pdf",
     });
 
     const response = await POST(req);
@@ -121,26 +109,10 @@ describe("POST /api/v1/kyb/submit", () => {
     expect(data.message).toBe("Authentication required");
   });
 
-  it("should return 400 when required files are missing", async () => {
-    const req = createMockFormDataRequest({
+  it("should return 400 when required paths are missing", async () => {
+    const req = createMockJsonRequest({
       registrationType: "Corporation",
       registrationNo: "REG-001",
-    });
-
-    const response = await POST(req);
-
-    expect(response.status).toBe(400);
-    const data = await response.json();
-    expect(data.success).toBe(false);
-    expect(data.message).toBe("Incorporation certificate is required");
-  });
-
-  it("should return 400 for invalid registration type", async () => {
-    const req = createMockFormDataRequest({
-      registrationType: "InvalidType",
-      registrationNo: "REG-001",
-      incorporationCertificate: createMockFile("cert.pdf"),
-      memorandumArticle: createMockFile("memo.pdf"),
     });
 
     const response = await POST(req);
@@ -151,14 +123,12 @@ describe("POST /api/v1/kyb/submit", () => {
     expect(data.message).toBe("Validation failed");
   });
 
-  it("should return 400 when file exceeds 5MB", async () => {
-    const oversizedFile = createMockFile("cert.pdf", 6 * 1024 * 1024);
-
-    const req = createMockFormDataRequest({
-      registrationType: "Corporation",
+  it("should return 400 for invalid registration type", async () => {
+    const req = createMockJsonRequest({
+      registrationType: "InvalidType",
       registrationNo: "REG-001",
-      incorporationCertificate: oversizedFile,
-      memorandumArticle: createMockFile("memo.pdf"),
+      incorporationCertificatePath: "path/to/cert.pdf",
+      memorandumArticlePath: "path/to/memo.pdf",
     });
 
     const response = await POST(req);
@@ -166,37 +136,19 @@ describe("POST /api/v1/kyb/submit", () => {
     expect(response.status).toBe(400);
     const data = await response.json();
     expect(data.success).toBe(false);
-    expect(data.message).toContain("exceeds maximum file size");
-  });
-
-  it("should return 400 for unsupported MIME type", async () => {
-    const invalidFile = createMockFile("cert.exe", 1024, "application/x-msdownload");
-
-    const req = createMockFormDataRequest({
-      registrationType: "Corporation",
-      registrationNo: "REG-001",
-      incorporationCertificate: invalidFile,
-      memorandumArticle: createMockFile("memo.pdf"),
-    });
-
-    const response = await POST(req);
-
-    expect(response.status).toBe(400);
-    const data = await response.json();
-    expect(data.success).toBe(false);
-    expect(data.message).toContain("unsupported file type");
+    expect(data.message).toBe("Validation failed");
   });
 
   it("should return 409 when KYB already pending", async () => {
     vi.mocked(KybService.submit).mockRejectedValue(
-      new ConflictError("A KYB verification is already pending review"),
+      new ConflictError("A KYB verification is already pending review")
     );
 
-    const req = createMockFormDataRequest({
+    const req = createMockJsonRequest({
       registrationType: "Corporation",
       registrationNo: "REG-001",
-      incorporationCertificate: createMockFile("cert.pdf"),
-      memorandumArticle: createMockFile("memo.pdf"),
+      incorporationCertificatePath: "path/to/cert.pdf",
+      memorandumArticlePath: "path/to/memo.pdf",
     });
 
     const response = await POST(req);
@@ -205,18 +157,16 @@ describe("POST /api/v1/kyb/submit", () => {
     const data = await response.json();
     expect(data.success).toBe(false);
     expect(data.message).toBe("A KYB verification is already pending review");
-
-    expect(KybService.deleteFromCloudinary).toHaveBeenCalled();
   });
 
-  it("should return 500 for unexpected errors and cleanup files", async () => {
+  it("should return 500 for unexpected errors", async () => {
     vi.mocked(KybService.submit).mockRejectedValue(new Error("DB failure"));
 
-    const req = createMockFormDataRequest({
+    const req = createMockJsonRequest({
       registrationType: "Corporation",
       registrationNo: "REG-001",
-      incorporationCertificate: createMockFile("cert.pdf"),
-      memorandumArticle: createMockFile("memo.pdf"),
+      incorporationCertificatePath: "path/to/cert.pdf",
+      memorandumArticlePath: "path/to/memo.pdf",
     });
 
     const response = await POST(req);
@@ -225,15 +175,14 @@ describe("POST /api/v1/kyb/submit", () => {
     const data = await response.json();
     expect(data.success).toBe(false);
     expect(data.message).toBe("Internal server error");
-    expect(KybService.deleteFromCloudinary).toHaveBeenCalled();
   });
 
   it("should return 400 when registration number is empty", async () => {
-    const req = createMockFormDataRequest({
+    const req = createMockJsonRequest({
       registrationType: "Corporation",
       registrationNo: "",
-      incorporationCertificate: createMockFile("cert.pdf"),
-      memorandumArticle: createMockFile("memo.pdf"),
+      incorporationCertificatePath: "path/to/cert.pdf",
+      memorandumArticlePath: "path/to/memo.pdf",
     });
 
     const response = await POST(req);
@@ -244,6 +193,3 @@ describe("POST /api/v1/kyb/submit", () => {
     expect(data.message).toBe("Validation failed");
   });
 });
-
-
-

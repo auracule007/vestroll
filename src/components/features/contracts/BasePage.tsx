@@ -21,7 +21,7 @@ export default function BasePage() {
   return (
     <section className="px-3 sm:px-6">
       <div className="space-y-4">
-        {!loading && (contracts.length > 0 ? <ContractMetrics /> : <FirstContractBanner />)}
+        <ContractMetrics loading={loading} />
         <ContractHistory contracts={contracts} loading={loading} />
       </div>
     </section>

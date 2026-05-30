@@ -17,10 +17,7 @@ const steps = [
   { id: 6, title: "Review & Sign", content: <EmployeeDetails /> },
 ];
 
-/**
- * Contracts multi-step form component.
- * Manages the state and navigation for creating a new contract.
- */
+
 function Contracts() {
   const [activeStep, setActiveStep] = useState(0);
 
@@ -66,9 +63,7 @@ interface Step {
   content: React.ReactNode;
 }
 
-/**
- * Renders the content of the current step.
- */
+
 function StepContent({
   steps,
   activeStep,
@@ -80,9 +75,7 @@ function StepContent({
   return <div className="py-10">{steps[activeStep].content}</div>;
 }
 
-/**
- * Navigation controls for the multi-step form.
- */
+
 function StepControls({
   steps,
   activeStep,

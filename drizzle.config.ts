@@ -1,8 +1,7 @@
-import { defineConfig } from "drizzle-kit";
 import fs from "node:fs";
 import path from "node:path";
 
-function getDatabaseUrl() {
+function getDatabaseUrl(): string {
   if (process.env.DATABASE_URL) {
     return process.env.DATABASE_URL;
   }
@@ -22,22 +21,16 @@ function getDatabaseUrl() {
     if (match?.[1]) return match[1].trim();
   }
 
-  return undefined;
-}
-
-const databaseUrl = getDatabaseUrl();
-
-if (!databaseUrl) {
   throw new Error(
     "DATABASE_URL is not set. Add it to .env.local or your shell environment.",
   );
 }
 
-export default defineConfig({
+export default {
   schema: "./src/server/db/schema.ts",
   out: "./drizzle/migrations",
-  dialect: "postgresql",
+  driver: "pg",
   dbCredentials: {
-    url: databaseUrl,
+    connectionString: getDatabaseUrl(),
   },
-});
+};

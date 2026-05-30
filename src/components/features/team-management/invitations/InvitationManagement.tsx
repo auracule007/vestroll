@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Filter, UserPlus, RefreshCw } from "lucide-react";
 import { InvitationCard } from "./InvitationCard";
 import { CreateInvitationForm } from "./CreateInvitationForm";
+import { CardSkeleton } from "@/components/ui/skeleton";
 
 interface Invitation {
   id: string;
@@ -41,7 +42,7 @@ interface InvitationManagementProps {
 }
 
 const roleOptions = [
-  { value: "", label: "All Roles" },
+  { value: "all", label: "All Roles" },
   { value: "admin", label: "Administrator" },
   { value: "hr_manager", label: "HR Manager" },
   { value: "payroll_manager", label: "Payroll Manager" },
@@ -49,7 +50,7 @@ const roleOptions = [
 ];
 
 const statusOptions = [
-  { value: "", label: "All Status" },
+  { value: "all", label: "All Status" },
   { value: "pending", label: "Pending" },
   { value: "accepted", label: "Accepted" },
   { value: "declined", label: "Declined" },
@@ -66,15 +67,15 @@ export function InvitationManagement({
   error,
 }: InvitationManagementProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   const filteredInvitations = invitations.filter((invitation) => {
     const matchesSearch = invitation.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          `${invitation.invitedBy.firstName} ${invitation.invitedBy.lastName}`.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = !roleFilter || invitation.role === roleFilter;
-    const matchesStatus = !statusFilter || invitation.status === statusFilter;
+    const matchesRole = roleFilter === "all" || invitation.role === roleFilter;
+    const matchesStatus = statusFilter === "all" || invitation.status === statusFilter;
     
     return matchesSearch && matchesRole && matchesStatus;
   });
@@ -208,7 +209,13 @@ export function InvitationManagement({
 
       {/* Invitations List */}
       <div className="space-y-4">
-        {filteredInvitations.length === 0 ? (
+        {isLoading && invitations.length === 0 ? (
+          <>
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+          </>
+        ) : filteredInvitations.length === 0 ? (
           <Card>
             <CardContent className="p-8 text-center">
               <UserPlus className="mx-auto h-12 w-12 text-muted-foreground mb-4" />

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 
-// Mock DB objects for testing locally
+
 const db = {
   fiat_transactions: {
     findUnique: async ({ where }: { where: { reference: string } }) => {
-      // Mock transaction
+      
       if (where.reference === "ref123") {
         return { reference: "ref123", status: "pending", organization_id: "org001" };
       }
@@ -49,7 +49,7 @@ export async function POST(
 }
 
 function verifyMonnifySignature(rawBody: string, signature: string) {
-  const secret = process.env.MONNIFY_SECRET_KEY || "test"; // fallback for local testing
+  const secret = process.env.MONNIFY_SECRET_KEY || "test"; 
   const hash = crypto.createHmac("sha512", secret).update(rawBody).digest("hex");
   return hash === signature;
 }
@@ -63,7 +63,7 @@ async function handleMonnifyWebhook(req: NextRequest, rawBody: string) {
 
   const payload = JSON.parse(rawBody);
 
-  // Log payload (audit log + console)
+  
   await logWebhookPayload("monnify", payload);
 
   if (payload.eventType === "SUCCESSFUL_TRANSACTION") {
@@ -84,15 +84,15 @@ async function processSuccessfulDeposit(reference: string, amount: number) {
     return;
   }
 
-  if (transaction.status === "success") return; // prevent duplicate processing
+  if (transaction.status === "success") return; 
 
-  // Update transaction status
+  
   await db.fiat_transactions.update({
     where: { reference },
     data: { status: "success" },
   });
 
-  // Increment organization balance
+  
   await db.organization_fiat_balances.update({
     where: { organization_id: transaction.organization_id },
     data: { balance: { increment: amount } },

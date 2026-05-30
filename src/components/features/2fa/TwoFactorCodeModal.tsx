@@ -19,22 +19,22 @@ export default function TwoFactorCodeModal({
 
   useEffect(() => {
     if (isOpen) {
-      // Reset code when modal opens
+      
       setCode(["", "", "", "", "", ""]);
-      // Focus first input
+      
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
     }
   }, [isOpen]);
 
   const handleChange = (value: string, index: number) => {
-    // Only allow numeric values
+    
     if (!/^[0-9]?$/.test(value)) return;
 
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
 
-    // Auto-advance to next input
+    
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -44,7 +44,7 @@ export default function TwoFactorCodeModal({
     e: React.KeyboardEvent<HTMLInputElement>,
     index: number,
   ) => {
-    // Handle backspace - move to previous input if current is empty
+    
     if (e.key === "Backspace" && !code[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -64,7 +64,7 @@ export default function TwoFactorCodeModal({
       });
       setCode(newCode);
 
-      // Focus the next empty field or the last field
+      
       const nextIndex = Math.min(digits.length, 5);
       inputRefs.current[nextIndex]?.focus();
     }

@@ -9,7 +9,7 @@ type SelectEmployeeModalProps = {
   onSelect: (employee: Employee) => void;
 };
 
-// A sub-component for rendering a single employee row
+
 const EmployeeRow = ({
   employee,
   onSelect,

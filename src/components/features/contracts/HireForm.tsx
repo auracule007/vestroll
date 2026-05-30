@@ -8,7 +8,7 @@ export default function HiringForm() {
   const [scopeOfWork, setScopeOfWork] = useState("");
   const [paymentPreference, setPaymentPreference] = useState<"crypto" | "fiat">("crypto");
   
-  // Bank details state
+  
   const [bankName, setBankName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [accountName, setAccountName] = useState("");
@@ -33,11 +33,11 @@ export default function HiringForm() {
     setAccountName("");
 
     try {
-      // Real implementation would call /api/v1/team/employees/bank-verification
-      // const res = await fetch("/api/v1/team/employees/bank-verification", { method: "POST", ...});
-      // const data = await res.json();
       
-      // Simulating network request
+      
+      
+      
+      
       await new Promise(resolve => setTimeout(resolve, 800));
       setAccountName("John Doe Verified");
     } catch (err) {

@@ -1,7 +1,4 @@
-/**
- * Unified API Client for VestRoll.
- * Handles fetch requests, error normalization (RFC 7807), and type-safe responses.
- */
+
 
 export interface ApiError {
   type?: string;
@@ -64,7 +61,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
     });
   }
 
-  // The backend ApiResponse.success wraps data in a { success: true, message: string, data: T } envelope
+  
   return (data?.data ?? data) as T;
 }
 
@@ -115,6 +112,19 @@ export const apiClient = {
         "Content-Type": "application/json",
         ...options?.headers,
       },
+    });
+    return handleResponse<T>(response);
+  },
+
+  async patch<T>(url: string, body?: any, options?: RequestInit): Promise<T> {
+    const response = await fetch(url, {
+      ...options,
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+      body: body ? JSON.stringify(body) : undefined,
     });
     return handleResponse<T>(response);
   },

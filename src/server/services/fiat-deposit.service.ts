@@ -44,13 +44,13 @@ export class FiatDepositService {
       throw new NotFoundError("Organization not found");
     }
 
-    // Use the provider preference from the input if provided, otherwise use organization's preference
+    
     const providerPreference: FiatProviderPreference = input.provider || organization.providerPreference || "monnify";
 
     const provider = createFiatProvider(providerPreference);
     const reference = buildDepositReference(organization.id);
 
-    // Convert amount to kobo for storage (NGN * 100)
+    
     const amountInKobo = Math.round(input.amount * 100);
 
     const deposit = await provider.initializePayment({
@@ -62,7 +62,7 @@ export class FiatDepositService {
       redirectUrl: input.redirectUrl,
     });
 
-    // Store the transaction in the database
+    
     await db.insert(fiatTransactions).values({
       organizationId: organization.id,
       amount: BigInt(amountInKobo),

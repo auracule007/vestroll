@@ -1,7 +1,4 @@
-/**
- * KYB (Know Your Business) Type Definitions
- * Shared types for KYB verification across frontend and backend
- */
+
 
 export const KYB_REJECTION_CODES = {
   INVALID_CERTIFICATE: "INVALID_CERTIFICATE",
@@ -27,9 +24,7 @@ export interface KybVerificationStatus {
   submittedAt: Date | null;
 }
 
-/**
- * Helper to get user-friendly messages for rejection codes
- */
+
 export const KYB_REJECTION_MESSAGES: Record<KybRejectionCode, string> = {
   INVALID_CERTIFICATE: "Please upload a valid incorporation certificate",
   INVALID_MEMORANDUM: "Please upload a valid memorandum of articles",
@@ -43,9 +38,7 @@ export const KYB_REJECTION_MESSAGES: Record<KybRejectionCode, string> = {
   OTHER: "Please review the rejection reason and resubmit",
 };
 
-/**
- * Helper to determine which field to highlight based on rejection code
- */
+
 export const KYB_REJECTION_FIELD_MAP: Record<KybRejectionCode, string | null> = {
   INVALID_CERTIFICATE: "incorporationCertificate",
   INVALID_MEMORANDUM: "memorandumArticle",

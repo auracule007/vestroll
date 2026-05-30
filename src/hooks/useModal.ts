@@ -19,30 +19,21 @@ interface CustomModalOptions {
   fullScreen?: boolean;
 }
 
-/**
- * Hook for managing application-wide modals via Redux.
- * Provides helper methods for common modal types (info, success, error, confirm, etc.)
- */
+
 const useModal = () => {
   const dispatch = useAppDispatch();
 
-  /**
-   * Displays a generic modal with the provided properties.
-   */
+  
   const showModal = (modalProps: ModalProps) => {
     dispatch(openModal(modalProps));
   };
 
-  /**
-   * Hides the currently active modal.
-   */
+  
   const hideModal = () => {
     dispatch(closeModal());
   };
 
-  /**
-   * Displays an information modal.
-   */
+  
   const showInfoModal = (
     title: string,
     content: React.ReactNode | string,
@@ -56,9 +47,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays a success modal.
-   */
+  
   const showSuccessModal = (
     title: string,
     content: React.ReactNode | string,
@@ -72,9 +61,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays an error modal.
-   */
+  
   const showErrorModal = (
     title: string,
     content: React.ReactNode | string,
@@ -88,9 +75,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays a warning modal.
-   */
+  
   const showWarningModal = (
     title: string,
     content: React.ReactNode | string,
@@ -104,9 +89,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays a confirmation modal with 'Confirm' and 'Cancel' options.
-   */
+  
   const showConfirmModal = (
     title: string,
     content: React.ReactNode | string,
@@ -137,9 +120,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays a custom component within a modal.
-   */
+  
   const showCustomModal = (
     customComponent: React.ReactNode,
     size?: ModalProps["size"]
@@ -152,9 +133,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays content-only modal with custom configuration.
-   */
+  
   const showContentOnlyModal = (
     content: React.ReactNode,
     options: CustomModalOptions = {}
@@ -171,9 +150,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays a modal with custom buttons.
-   */
+  
   const showModalWithButtons = (
     title: string,
     content: React.ReactNode | string,
@@ -192,9 +169,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays an enhanced modal with full control over buttons and display options.
-   */
+  
   const showEnhancedModal = (
     content: React.ReactNode,
     options: CustomModalOptions = {}
@@ -211,9 +186,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays a modal that forces a user action (no close button).
-   */
+  
   const showForceActionModal = (
     title: string,
     content: React.ReactNode | string,
@@ -231,9 +204,7 @@ const useModal = () => {
     });
   };
 
-  /**
-   * Displays a loading modal (no interaction allowed).
-   */
+  
   const showLoadingModal = (
     title: string,
     content: React.ReactNode | string,

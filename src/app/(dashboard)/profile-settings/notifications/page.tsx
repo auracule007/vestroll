@@ -15,7 +15,7 @@ type SectionType = "employment" | "teamManagement";
 export default function NotificationsPage() {
   const router = useRouter();
 
-  // Employment section notifications
+  
   const [employmentNotifications, setEmploymentNotifications] = useState<
     NotificationSetting[]
   >([
@@ -39,7 +39,7 @@ export default function NotificationsPage() {
     },
   ]);
 
-  // Team Management section notifications
+  
   const [teamManagementNotifications, setTeamManagementNotifications] =
     useState<NotificationSetting[]>([
       {

@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   compress: true,
   serverExternalPackages: ["ioredis"],
   turbopack: {
-    root: join(__dirname), // Set the root to the current directory dynamically
+    root: process.cwd(),
     rules: {
       "*.svg": {
         loaders: ["@svgr/webpack"],
@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
     },
   },
   allowedDevOrigins: ["10.199.228.216"],
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@heroicons/react', 'lodash', 'date-fns', '@headlessui/react', '@radix-ui/react-icons'],
+  },
   images: {
     remotePatterns: [
       {

@@ -16,13 +16,13 @@ export function OTPInput({
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleChange = (inputValue: string, index: number) => {
-    // Only allow single digits
+    
     if (/^[0-9]?$/.test(inputValue)) {
       const newValue = [...value];
       newValue[index] = inputValue;
       onChange(newValue);
 
-      // Auto focus next input
+      
       if (inputValue && index < 5) {
         inputRefs.current[index + 1]?.focus();
       }
@@ -49,7 +49,7 @@ export function OTPInput({
       });
       onChange(newValue);
 
-      // Focus the next empty field or the last field
+      
       const nextIndex = Math.min(digits.length, 5);
       inputRefs.current[nextIndex]?.focus();
     }

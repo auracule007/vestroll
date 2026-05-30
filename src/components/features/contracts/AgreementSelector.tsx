@@ -42,7 +42,7 @@ export default function AgreementSelector() {
     setShowPreview(false);
   };
 
-  // Cleanup preview URL
+  
   useEffect(() => {
     return () => {
       if (previewUrl && previewUrl !== "standard") {
@@ -105,7 +105,7 @@ export default function AgreementSelector() {
             {/* Modal Content */}
             <div className="flex-1 overflow-auto text-gray-500 p-6">
               {previewUrl === "standard" ? (
-                // Mock standard agreement
+                
                 <div className="prose max-w-none">
                   <h1 className="text-2xl font-bold mb-4">
                     Standard Service Agreement

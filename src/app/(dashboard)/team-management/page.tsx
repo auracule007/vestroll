@@ -18,6 +18,7 @@ import { TeamService } from "@/lib/api/team";
 import { useToast } from "@/hooks/useToast";
 import { useEffect } from "react";
 import { ToastContainer } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 
 const TeamManagementDashboard = () => {
   const [activeTab, setActiveTab] = useState("Employees");
@@ -26,6 +27,7 @@ const TeamManagementDashboard = () => {
   const [isInviting, setIsInviting] = useState(false);
   const [invitationError, setInvitationError] = useState<string | null>(null);
   const { toasts, removeToast, success, error: toastError } = useToast();
+  const router = useRouter();
 
   const allEmployees = generateMockEmployees();
 
@@ -33,7 +35,7 @@ const TeamManagementDashboard = () => {
     setIsInviting(true);
     try {
       const response: any = await TeamService.listInvitations();
-      // Handle both { data: [...] } and directly [...]
+      
       const data = response.data || response;
       setInvitations(Array.isArray(data) ? data : (data.data || []));
     } catch (err: any) {
@@ -136,7 +138,7 @@ const TeamManagementDashboard = () => {
               {activeTab === "Time off" && (
                 <Link
                   className="flex items-center gap-2 bg-primary-500 text-white md:h-10 px-4 rounded-lg"
-                  href={"/app/team-management/create-timeoff"}
+                  href={"/team-management/create-timeoff"}
                 >
                   <Plus />{" "}
                   <span className="hidden md:inline">Create request</span>

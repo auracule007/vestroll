@@ -5,7 +5,7 @@ export class WebhookService {
     payload: Record<string, unknown>,
     signature: string,
   ) {
-    // Mock webhook verification
+    
     if (!signature) {
       throw new Error("Missing signature");
     }
@@ -15,7 +15,7 @@ export class WebhookService {
       id: payload.id,
     });
 
-    // Handle different webhook types
+    
     switch (payload.type) {
       case "payout.success":
         Logger.info("Payout successful", { id: payload.id });

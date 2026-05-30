@@ -294,7 +294,7 @@ export const biometricLogs = pgTable("biometric_logs", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-/** Server-issued WebAuthn registration challenges; hashed at rest, time-bound and single-use. */
+
 export const passkeyRegistrationChallenges = pgTable(
   "passkey_registration_challenges",
   {
@@ -329,7 +329,7 @@ export const employees = pgTable(
     userId: uuid("user_id").references(() => users.id, {
       onDelete: "set null",
     }),
-    // Bank account details
+    
     bankName: varchar("bank_name", { length: 255 }),
     accountNumber: varchar("account_number", { length: 255 }),
     routingNumber: varchar("routing_number", { length: 255 }),
@@ -407,7 +407,7 @@ export const organizationFiatBalances = pgTable("organization_fiat_balances", {
     .notNull()
     .unique(),
   currency: varchar("currency", { length: 3 }).default("NGN").notNull(),
-  /** Amount in kobo/cents to avoid floating point issues */
+  
   balance: bigint("balance", { mode: "bigint" }).default(sql`0`).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -676,7 +676,7 @@ export const fiatTransactions = pgTable(
     organizationId: uuid("organization_id")
       .references(() => organizations.id, { onDelete: "cascade" })
       .notNull(),
-    /** Amount in kobo (smallest NGN unit) to avoid floating-point issues */
+    
     amount: bigint("amount", { mode: "bigint" }).notNull(),
     type: fiatTransactionTypeEnum("type").notNull(),
     status: fiatTransactionStatusEnum("status").default("pending").notNull(),
@@ -684,6 +684,7 @@ export const fiatTransactions = pgTable(
     providerReference: varchar("provider_reference", { length: 255 })
       .notNull()
       .unique(),
+    reference: varchar("reference", { length: 255 }).unique(),
     metadata: jsonb("metadata"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
@@ -704,7 +705,7 @@ export const fiatTransactionRelations = relations(
   }),
 );
 
-// Transaction idempotency cache table (Issue #317)
+
 export const transactionCache = pgTable("transaction_cache", {
   hash: text("hash").primaryKey(),
   resultJson: text("result_json").notNull(),

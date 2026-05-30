@@ -11,7 +11,7 @@ export const handleChecklistLayoutTitle = (slug: string) => {
     }
 };
 
-// function to handle metadata title based on slug
+
 export const handleChecklistMetadata = (slug: string) => {
     switch (slug) {
         case "kyb-verification":

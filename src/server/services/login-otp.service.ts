@@ -3,7 +3,7 @@ import { eq, and, desc } from "drizzle-orm";
 import { OTPService } from "./otp.service";
 import { EmailService } from "./email.service";
 import { UserService } from "./user.service";
-import { JWTTokenService } from "./jwt-token.service";
+import { JWTService } from "./jwt.service";
 import { SessionManagementService } from "./session-management.service";
 import { NotFoundError, BadRequestError, UnauthorizedError, ForbiddenError } from "../utils/errors";
 import { Logger } from "./logger.service";
@@ -12,25 +12,18 @@ import crypto from "crypto";
 const OTP_EXPIRATION_MINUTES = 15;
 const MAX_ATTEMPTS = 5;
 
-/**
- * Handles the two-step login OTP flow:
- * 1. After password verification, generate and email a login OTP
- * 2. Verify the OTP and issue tokens
- */
+
 export class LoginOTPService {
-  /**
-   * Generates a fresh login OTP, stores it, and emails it to the user.
-   * Called right after password verification succeeds.
-   */
+  
   static async sendLoginOTP(userId: string, email: string, firstName: string): Promise<void> {
     const otp = OTPService.generateOTP();
     const otpHash = await OTPService.hashOTP(otp);
     const expiresAt = new Date(Date.now() + OTP_EXPIRATION_MINUTES * 60 * 1000);
 
-    // Invalidate any existing unverified records for this user
+    
     await db
       .update(emailVerifications)
-      .set({ verified: true }) // mark old ones as consumed so they can't be used
+      .set({ verified: true }) 
       .where(
         and(
           eq(emailVerifications.userId, userId),
@@ -38,7 +31,7 @@ export class LoginOTPService {
         ),
       );
 
-    // Insert fresh OTP record
+    
     await db.insert(emailVerifications).values({
       userId,
       otpHash,
@@ -47,13 +40,11 @@ export class LoginOTPService {
 
     Logger.info("Login OTP generated and sent", { email });
 
-    // Fire email
+    
     await EmailService.sendVerificationOTPEmail(email, firstName, otp);
   }
 
-  /**
-   * Verifies the login OTP and issues access/refresh tokens on success.
-   */
+  
   static async verifyLoginOTP(
     email: string,
     otp: string,
@@ -111,24 +102,25 @@ export class LoginOTPService {
       );
     }
 
-    // Mark OTP as consumed
+    
     await db
       .update(emailVerifications)
       .set({ verified: true })
       .where(eq(emailVerifications.id, verificationRecord.id));
 
-    // Issue tokens
+    
     const sessionId = crypto.randomUUID();
 
-    const accessToken = await JWTTokenService.generateAccessToken({
+    const accessToken = await JWTService.generateAccessToken({
       userId: user.id,
       email: user.email,
     });
 
-    const refreshToken = await JWTTokenService.generateRefreshToken(
-      { userId: user.id, email: user.email, sessionId },
-      rememberMe,
-    );
+    const refreshToken = await JWTService.generateRefreshToken({
+      userId: user.id,
+      email: user.email,
+      sessionId,
+    });
 
     const expiresAt = new Date(Date.now() + (rememberMe ? 30 : 7) * 24 * 60 * 60 * 1000);
 

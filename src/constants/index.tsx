@@ -8,7 +8,7 @@ import {
   Profile,
 } from "@/../public/svg";
 
-// Fallback icon components to preserve existing usage and resolve missing default export
+
 const Icons = {
   DoneIcon: () => <CalendarCheckIcon />,
   BriefcaseIcon: () => <CalendarOngoingIcon />,
@@ -43,7 +43,7 @@ export const invoiceMetricsData = [
   },
 ];
 
-// Contracts page metrics
+
 export const contractMetricsData = [
   {
     title: "Completed contracts",

@@ -6,7 +6,7 @@ import type { PgTransaction } from "drizzle-orm/pg-core";
 export type UserStatus = (typeof userStatusEnum.enumValues)[number];
 export type SignerType = (typeof signerTypeEnum.enumValues)[number];
 
-// Whitelist of allowed domains for avatar URLs
+
 const ALLOWED_AVATAR_DOMAINS = [
   "vestroll-assets.s3.amazonaws.com",
   "res.cloudinary.com",
@@ -14,12 +14,7 @@ const ALLOWED_AVATAR_DOMAINS = [
   "storage.googleapis.com",
 ];
 
-/**
- * Validates that an avatar URL points to an allowed domain.
- * 
- * @param avatarUrl - The URL to validate.
- * @throws {Error} If the URL is invalid or the domain is not whitelisted.
- */
+
 function validateAvatarUrl(avatarUrl: string | null | undefined): void {
   if (!avatarUrl) return;
 
@@ -44,13 +39,9 @@ function validateAvatarUrl(avatarUrl: string | null | undefined): void {
   }
 }
 
-/**
- * UserService handles user-related database operations and profile management.
- */
+
 export class UserService {
-  /**
-   * Finds a user by their email address.
-   */
+  
   static async findByEmail(email: string) {
     const normalizedEmail = email.toLowerCase().trim();
 
@@ -63,9 +54,7 @@ export class UserService {
     return user || null;
   }
 
-  /**
-   * Creates a new user record.
-   */
+  
   static async create(
     data: {
       firstName: string;
@@ -91,9 +80,7 @@ export class UserService {
     return user;
   }
 
-  /**
-   * Finds a user by their unique ID.
-   */
+  
   static async findById(id: string) {
     const [user] = await db
       .select()
@@ -104,9 +91,7 @@ export class UserService {
     return user || null;
   }
 
-  /**
-   * Updates an existing user's profile and logs security-sensitive changes.
-   */
+  
   static async update(
     userId: string,
     data: Partial<typeof users.$inferInsert>,

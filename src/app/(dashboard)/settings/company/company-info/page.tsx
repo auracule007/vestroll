@@ -46,7 +46,7 @@ export default function CompanyInfoPage() {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Pre-fill form from API
+  
   useEffect(() => {
     OrganizationApi.getProfile()
       .then((profile) => {

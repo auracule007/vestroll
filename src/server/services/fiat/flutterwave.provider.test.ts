@@ -58,7 +58,7 @@ describe("FlutterwaveProvider", () => {
         fee: 26.88,
       });
 
-      // Verify the request sent to Flutterwave
+      
       const [url, options] = fetchMock.mock.calls[0];
       expect(url).toBe("https://api.flutterwave.com/v3/transfers");
       expect(options.method).toBe("POST");
@@ -254,7 +254,7 @@ describe("FlutterwaveProvider", () => {
         reference: "va-ref-001",
       });
 
-      // Verify the request sent to Flutterwave
+      
       const [url, options] = fetchMock.mock.calls[0];
       expect(url).toBe(
         "https://api.flutterwave.com/v3/virtual-account-numbers",

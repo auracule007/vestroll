@@ -17,21 +17,14 @@ export interface HandlerContext<T = any> {
   metadata: RequestMetadata;
 }
 
-/**
- * Wraps a Next.js route handler with standard RFC 7807 error handling,
- * optional Zod validation, and automatic metadata extraction.
- *
- * @param options - Configuration for the handler.
- * @param options.schema - Optional Zod schema to validate the request body.
- * @param handler - The actual logic for the route.
- */
+
 export function withHandler<T = any>(
   options:
     | { schema?: z.ZodSchema<T> }
     | ((req: NextRequest, ctx: any) => Promise<NextResponse>),
   handler?: (req: NextRequest, ctx: HandlerContext<T>) => Promise<NextResponse>,
 ) {
-  // Overload: withHandler(async (req, ctx) => ...)
+  
   if (typeof options === "function") {
     return withHandler({}, options);
   }
@@ -123,7 +116,5 @@ export function withHandler<T = any>(
   };
 }
 
-/**
- * @deprecated Use withHandler instead for enhanced functionality.
- */
+
 export const withErrorHandler = withHandler;

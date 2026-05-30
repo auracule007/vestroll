@@ -73,7 +73,7 @@ const taxTypes = [
 ];
 const taxRates = ["5%", "7.5%", "10%", "13%", "15%", "18%", "20%", "25%"];
 
-// Zod schema for validation
+
 const milestoneSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Title is required"),

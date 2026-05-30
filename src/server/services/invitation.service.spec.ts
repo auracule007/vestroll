@@ -13,7 +13,7 @@ run("InvitationService", () => {
   let cleanup: (() => Promise<void>)[] = [];
 
   beforeEach(async () => {
-    // Create test organization
+    
     const [org] = await db
       .insert(organizations)
       .values({
@@ -24,7 +24,7 @@ run("InvitationService", () => {
       .returning();
     testOrganization = org;
 
-    // Create test user
+    
     const [user] = await db
       .insert(users)
       .values({
@@ -41,7 +41,7 @@ run("InvitationService", () => {
   });
 
   afterEach(async () => {
-    // Clean up test data
+    
     for (const cleanupFn of cleanup.reverse()) {
       await cleanupFn();
     }
@@ -69,14 +69,14 @@ run("InvitationService", () => {
       expect(invitation.organization.name).toBe(testOrganization.name);
       expect(invitation.invitedBy.email).toBe(testUser.email);
 
-      // Add to cleanup
+      
       cleanup.push(async () => {
         await db.delete(organizationInvitations).where(eq(organizationInvitations.id, invitation.id));
       });
     });
 
     it("should throw error if user already exists in organization", async () => {
-      // Create another user in the same organization
+      
       const [existingUser] = await db
         .insert(users)
         .values({
@@ -113,13 +113,13 @@ run("InvitationService", () => {
         role: "employee" as const,
       };
 
-      // Create first invitation
+      
       const firstInvitation = await invitationService.createInvitation(invitationData);
       cleanup.push(async () => {
         await (db.delete(organizationInvitations).where(eq(organizationInvitations.id, firstInvitation.id)) as any);
       });
 
-      // Try to create duplicate invitation
+      
       await expect(invitationService.createInvitation(invitationData)).rejects.toThrow(
         "Pending invitation already exists for this email"
       );
@@ -168,7 +168,7 @@ run("InvitationService", () => {
         await (db.delete(organizationInvitations).where(eq(organizationInvitations.id, invitation.id)) as any)
       );
 
-      // Create a new user to accept the invitation
+      
       const [newUser] = await db
         .insert(users)
         .values({
@@ -185,12 +185,12 @@ run("InvitationService", () => {
 
       await invitationService.acceptInvitation(invitation.token, newUser.id);
 
-      // Verify invitation status changed
+      
       const updatedInvitation = await invitationService.getInvitationById(invitation.id);
       expect(updatedInvitation?.status).toBe("accepted");
       expect(updatedInvitation?.acceptedAt).toBeDefined();
 
-      // Verify user organization and role updated
+      
       const updatedUser = await db.select().from(users).where(eq(users.id, newUser.id)).limit(1);
       expect(updatedUser[0].organizationId).toBe(testOrganization.id);
       expect(updatedUser[0].role).toBe("payroll_manager");
@@ -210,7 +210,7 @@ run("InvitationService", () => {
         await (db.delete(organizationInvitations).where(eq(organizationInvitations.id, invitation.id)) as any)
       );
 
-      // Manually set invitation to expired
+      
       await db
         .update(organizationInvitations)
         .set({
@@ -315,7 +315,7 @@ run("InvitationService", () => {
         await (db.delete(organizationInvitations).where(eq(organizationInvitations.id, invitation.id)) as any)
       );
 
-      // Manually set invitation to accepted
+      
       await db
         .update(organizationInvitations)
         .set({
@@ -332,7 +332,7 @@ run("InvitationService", () => {
 
   describe("listInvitations", () => {
     it("should return paginated invitations for organization", async () => {
-      // Create multiple invitations
+      
       const invitations = [];
       for (let i = 0; i < 5; i++) {
         const invitationData = {
@@ -358,7 +358,7 @@ run("InvitationService", () => {
     });
 
     it("should filter invitations by status", async () => {
-      // Create invitations with different statuses
+      
       const pendingInvitation = await invitationService.createInvitation({
         organizationId: testOrganization.id,
         invitedByUserId: testUser.id,
@@ -369,7 +369,7 @@ run("InvitationService", () => {
         await (db.delete(organizationInvitations).where(eq(organizationInvitations.organizationId, testOrganization.id)) as any);
       });
 
-      // Manually create an accepted invitation
+      
       const [acceptedInvitation] = await db
         .insert(organizationInvitations)
         .values({
@@ -399,7 +399,7 @@ run("InvitationService", () => {
 
   describe("expireInvitations", () => {
     it("should expire pending invitations past their expiry date", async () => {
-      // Create invitation with past expiry
+      
       const [expiredInvitation] = await db
         .insert(organizationInvitations)
         .values({

@@ -103,21 +103,12 @@ export interface LedgerHealth {
   ledgerAgeSeconds: number;
 }
 
-/**
- * BlockchainService provides a high-level API for interacting with the Stellar network
- * and Soroban smart contracts. It handles account management, transaction building,
- * signing, simulation, and submission.
- */
+
 export class BlockchainService {
   private rpcServer: RpcServer;
   private networkConfig: NetworkConfig;
 
-  /**
-   * Initializes a new instance of the BlockchainService.
-   * 
-   * @param network - The Stellar network to connect to (testnet, mainnet, or futurenet).
-   * @param serviceDiscovery - Optional service discovery for dynamic RPC/Horizon URL resolution.
-   */
+  
   constructor(
     network: NetworkName = "testnet",
     private readonly serviceDiscovery: ServiceDiscovery = new EnvServiceDiscovery(),
@@ -141,13 +132,7 @@ export class BlockchainService {
     });
   }
 
-  /**
-   * Retrieves account details from the RPC server.
-   * 
-   * @param publicKey - The public key of the account to fetch.
-   * @returns The account data from the RPC server.
-   * @throws {wrapBlockchainError} If the account cannot be loaded.
-   */
+  
   async getAccount(publicKey: string) {
     try {
       return await this.rpcServer.getAccount(publicKey);
@@ -160,13 +145,7 @@ export class BlockchainService {
     }
   }
 
-  /**
-   * Fetches account balances from the Horizon server.
-   * 
-   * @param publicKey - The public key of the account.
-   * @returns An array of asset balances.
-   * @throws {wrapBlockchainError} If the fetch fails.
-   */
+  
   async getAccountBalances(publicKey: string): Promise<AccountBalance[]> {
     try {
       const response = await fetch(
@@ -205,12 +184,7 @@ export class BlockchainService {
     }
   }
 
-  /**
-   * Funds a testnet account using Friendbot.
-   * 
-   * @param publicKey - The public key to fund.
-   * @throws {Error} If Friendbot is unavailable or funding fails.
-   */
+  
   async fundTestnetAccount(publicKey: string): Promise<void> {
     const friendbotUrl = this.networkConfig.friendbotUrl;
     if (!friendbotUrl) {
@@ -227,11 +201,7 @@ export class BlockchainService {
     Logger.info("Test account funded via Friendbot", { publicKey });
   }
 
-  /**
-   * Generates a new random Keypair.
-   * 
-   * @returns An object containing the new public key and secret.
-   */
+  
   static generateKeypair() {
     const keypair = Keypair.random();
     return {
@@ -240,23 +210,12 @@ export class BlockchainService {
     };
   }
 
-  /**
-   * Creates a Keypair instance from a secret string.
-   * 
-   * @param secret - The secret key.
-   * @returns A Keypair instance.
-   */
+  
   static keypairFromSecret(secret: string): Keypair {
     return Keypair.fromSecret(secret);
   }
 
-  /**
-   * Builds a simple payment transaction XDR.
-   * 
-   * @param params - Transaction parameters including source secret, destination, and amount.
-   * @returns The generated XDR and transaction hash.
-   * @throws {Error} If the memo exceeds 28 bytes.
-   */
+  
   async buildPaymentXdr(params: {
     sourceSecret: string;
     destination: string;
@@ -303,12 +262,7 @@ export class BlockchainService {
     };
   }
 
-  /**
-   * Builds a transaction XDR from a list of operations.
-   * 
-   * @param params - Transaction parameters.
-   * @returns The generated XDR and transaction hash.
-   */
+  
   async buildTransactionXdr(params: {
     sourcePublicKey: string;
     operations: xdr.Operation[];
@@ -335,12 +289,7 @@ export class BlockchainService {
     };
   }
 
-  /**
-   * Validates that the transaction's network passphrase matches the configured network.
-   * 
-   * @param passphrase - The network passphrase to validate.
-   * @throws {Error} If a cross-network transaction is detected.
-   */
+  
   private validateNetwork(passphrase?: string): void {
     if (passphrase && passphrase !== this.networkConfig.networkPassphrase) {
       throw new Error(
@@ -349,13 +298,7 @@ export class BlockchainService {
     }
   }
 
-  /**
-   * Signs a transaction with a secret key and records an audit trail.
-   * 
-   * @param input - The transaction XDR or TransactionXdr object.
-   * @param signerSecret - The secret key used for signing.
-   * @returns The signed transaction XDR.
-   */
+  
   signTransaction(input: string | TransactionXdr, signerSecret: string): string {
     const xdrEnvelope = typeof input === "string" ? input : input.xdr;
     this.validateNetwork(typeof input === "string" ? undefined : input.networkPassphrase);
@@ -384,13 +327,7 @@ export class BlockchainService {
     return tx.toXDR();
   }
 
-  /**
-   * Simulates a transaction on the Soroban RPC server.
-   * 
-   * @param input - The transaction XDR or TransactionXdr object.
-   * @returns The simulation results including resource fees and events.
-   * @throws {SimulationFailedError} If simulation fails.
-   */
+  
   async simulateTransaction(input: string | TransactionXdr): Promise<SimulationResult> {
     const txXdr = typeof input === "string" ? input : input.xdr;
     this.validateNetwork(typeof input === "string" ? undefined : input.networkPassphrase);
@@ -426,12 +363,7 @@ export class BlockchainService {
     };
   }
 
-  /**
-   * Prepares a transaction by populating resource footprints (via Soroban RPC).
-   * 
-   * @param input - The transaction XDR or TransactionXdr object.
-   * @returns The prepared transaction XDR.
-   */
+  
   async prepareTransaction(input: string | TransactionXdr): Promise<string> {
     const txXdr = typeof input === "string" ? input : input.xdr;
     this.validateNetwork(typeof input === "string" ? undefined : input.networkPassphrase);
@@ -445,14 +377,7 @@ export class BlockchainService {
     return prepared.toXDR();
   }
 
-  /**
-   * Submits a transaction to the network and polls for results.
-   * Implements idempotency to prevent duplicate submissions.
-   * 
-   * @param input - The signed transaction XDR or TransactionXdr object.
-   * @returns The submission result (ledger, result XDR).
-   * @throws {TransactionRejectedError} If the transaction is rejected or fails on-chain.
-   */
+  
   async submitTransaction(input: string | TransactionXdr): Promise<SubmissionResult> {
     const signedXdr = typeof input === "string" ? input : input.xdr;
     this.validateNetwork(typeof input === "string" ? undefined : input.networkPassphrase);
@@ -523,12 +448,7 @@ export class BlockchainService {
     return result;
   }
 
-  /**
-   * Wraps an inner transaction in a fee bump transaction.
-   * 
-   * @param params - Inner transaction and fee payer details.
-   * @returns The generated fee bump XDR.
-   */
+  
   async buildFeeBumpXdr(params: {
     innerTxXdr: string | TransactionXdr;
     feeSourceSecret: string;
@@ -569,12 +489,7 @@ export class BlockchainService {
     };
   }
 
-  /**
-   * Builds a transaction XDR for calling a Soroban smart contract method.
-   * 
-   * @param params - Contract ID, method name, and arguments.
-   * @returns The generated XDR and transaction hash.
-   */
+  
   async buildContractCallXdr(params: {
     sourcePublicKey: string;
     contractId: string;
@@ -599,9 +514,7 @@ export class BlockchainService {
     };
   }
 
-  /**
-   * Converts a native JavaScript value to a Soroban ScVal.
-   */
+  
   static toScVal(
     value: unknown,
     opts?: Parameters<typeof nativeToScVal>[1],
@@ -609,37 +522,27 @@ export class BlockchainService {
     return nativeToScVal(value, opts);
   }
 
-  /**
-   * Converts a Soroban ScVal to a native JavaScript value.
-   */
+  
   static fromScVal(scVal: xdr.ScVal): unknown {
     return scValToNative(scVal);
   }
 
-  /**
-   * Converts a G-Address to a Soroban ScVal Address.
-   */
+  
   static addressToScVal(address: string): xdr.ScVal {
     return new Address(address).toScVal();
   }
 
-  /**
-   * Retrieves the network passphrase from the RPC server.
-   */
+  
   async getNetwork() {
     return this.rpcServer.getNetwork();
   }
 
-  /**
-   * Retrieves the latest ledger number from the RPC server.
-   */
+  
   async getLatestLedger() {
     return this.rpcServer.getLatestLedger();
   }
 
-  /**
-   * Private helper to fetch ledger data from Horizon.
-   */
+  
   private async fetchHorizonLedger(params: {
     path: string;
     missingDataMessage: string;
@@ -678,11 +581,7 @@ export class BlockchainService {
     };
   }
 
-  /**
-   * Calculates the health of the RPC server relative to the network tip.
-   * 
-   * @returns Ledger health statistics (current sequence and age).
-   */
+  
   async getLedgerHealth(): Promise<LedgerHealth> {
     const rpcLatestLedger = await this.rpcServer.getLatestLedger();
     const localLedgerSequence = Number(rpcLatestLedger?.sequence);
@@ -716,11 +615,7 @@ export class BlockchainService {
     };
   }
 
-  /**
-   * Checks if the RPC server reports a healthy status.
-   * 
-   * @returns Promise resolving to true if healthy, false otherwise.
-   */
+  
   async isHealthy(): Promise<boolean> {
     try {
       const health = await this.rpcServer.getHealth();
@@ -730,20 +625,7 @@ export class BlockchainService {
     }
   }
 
-  /**
-   * Fetches specific diagnostic events from the Stellar RPC.
-   *
-   * @param params - Filtering parameters for events (contractId, topics, limit, fromLedger).
-   * @returns A promise that resolves to a typed array of ContractEvent.
-   *
-   * @example
-   * ```ts
-   * const events = await blockchainService.getContractEvents({
-   *   contractId: "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
-   *   fromLedger: 1000
-   * });
-   * ```
-   */
+  
   async getContractEvents(
     params: GetContractEventsParams,
   ): Promise<ContractEvent[]> {

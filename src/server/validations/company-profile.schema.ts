@@ -1,7 +1,7 @@
 import { z } from "zod";
 import countries from "i18n-iso-countries";
 
-// Ensure country data is loaded (important!)
+
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
 
 export const companyProfileSchema = z

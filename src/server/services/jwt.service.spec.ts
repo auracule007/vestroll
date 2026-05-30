@@ -98,7 +98,7 @@ describe("JWTService", () => {
 
             const token = await JWTService.generateAccessToken(payload);
 
-            // Wait for expiration
+            
             await new Promise(resolve => setTimeout(resolve, 50));
 
             await expect(JWTService.verifyAccessToken(token)).rejects.toThrow(

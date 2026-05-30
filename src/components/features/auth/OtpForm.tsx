@@ -29,7 +29,7 @@ const OtpForm: React.FC = () => {
     newOtp[idx] = val;
     setOtp(newOtp);
 
-    // Unmask this input
+    
     setMasked((prev) => {
       const arr = [...prev];
       arr[idx] = false;
@@ -37,7 +37,7 @@ const OtpForm: React.FC = () => {
     });
 
     if (val) {
-      // Mask after delay
+      
       setTimeout(() => {
         setMasked((prev) => {
           const arr = [...prev];

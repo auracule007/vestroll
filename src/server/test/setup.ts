@@ -2,10 +2,10 @@ import { beforeAll, afterAll, beforeEach } from "vitest";
 import { loadEnvConfig } from "@next/env";
 import path from "path";
 
-// Load test environment variables
+
 loadEnvConfig(path.resolve(process.cwd()));
 
-// Ensure we are in test mode
+
 (process.env as any).NODE_ENV = "test";
 
 beforeAll(async () => {

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
   className?: string;
-  /** Renders a full-screen centered overlay — used for page-level loading */
+  
   fullScreen?: boolean;
 }
 

@@ -21,7 +21,7 @@ function makeResponse(body: string, status = 200): NextResponse {
 }
 
 const smallBody = JSON.stringify({ ok: true });
-const largeBody = JSON.stringify({ data: "x".repeat(1100) }); // > 1 KB
+const largeBody = JSON.stringify({ data: "x".repeat(1100) }); 
 
 describe("compressResponse", () => {
   it("returns response unchanged when body is below 1 KB threshold", async () => {

@@ -14,7 +14,7 @@ type CreateOrgOpts = {
   fakerSeed?: number;
 };
 
-type TeamWithRoles = any; // repository does not define `teams`/`roles` tables here
+type TeamWithRoles = any; 
 
 type CreateOrgResult = {
   organization: typeof organizations.$inferSelect;

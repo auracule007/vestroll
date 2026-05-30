@@ -94,7 +94,7 @@ function HeaderTab({
     <div className="px-4 pt-6 mb-3 bg-white lg:mb-6">
       <div>
         <Link
-          href="/app/settings"
+          href="/settings"
           className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -125,25 +125,25 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState("Company");
   const tabs = ["Company", "Permissions", "Payment Methods", "Notifications"];
 
-  // ── Org profile ─────────────────────────────────────────────────────────────
+  
   const [profile, setProfile] = useState<CompanyProfile | null>(null);
 
   useEffect(() => {
     OrganizationApi.getProfile()
       .then(setProfile)
-      .catch(() => {}); // silently fall back to placeholder UI
+      .catch(() => {}); 
   }, []);
 
-  // ── Logo state ──────────────────────────────────────────────────────────────
+  
   const [logoSrc, setLogoSrc] = useState("/touchpoint360.png");
   const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  // Track the current blob URL so we can revoke it on any path (success/error/unmount)
+  
   const currentBlobUrlRef = React.useRef<string | null>(null);
 
-  // Revoke a blob URL and clear the ref
+  
   const revokeBlobUrl = useCallback(() => {
     if (currentBlobUrlRef.current) {
       URL.revokeObjectURL(currentBlobUrlRef.current);
@@ -151,47 +151,28 @@ export default function Page() {
     }
   }, []);
 
-  /**
-   * 3-step logo upload:
-   *  1. GET /api/v1/organizations/logo-upload-url → { signedUrl, key }
-   *  2. PUT blob → S3 via signedUrl
-   *  3. PATCH /api/v1/organizations/logo { key } → { logoUrl }
-   *
-   * Optimistic update: show the local blob URL immediately while upload runs.
-   */
+  
   const handleLogoSave = useCallback(async (file: File) => {
     setUploadError(null);
 
-    // Revoke any previous blob URL before creating a new one
+    
     revokeBlobUrl();
 
-    // Optimistic UI: swap logo immediately so the user sees their crop right away
+    
     const localUrl = URL.createObjectURL(file);
     currentBlobUrlRef.current = localUrl;
     setLogoSrc(localUrl);
     setIsLogoModalOpen(false);
 
-    // Read Bearer token from localStorage (set by the auth layer on login)
-    const accessToken =
-      typeof window !== "undefined"
-        ? window.localStorage.getItem("access_token")
-        : null;
-    const authHeaders: HeadersInit = accessToken
-      ? { Authorization: `Bearer ${accessToken}` }
-      : {};
-
     setIsUploadingLogo(true);
     try {
-      // Step 1 — get presigned S3 upload URL
-      const urlRes = await fetch(
-        `/api/v1/organizations/logo-upload-url?filename=${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`,
-        { headers: authHeaders },
+      
+      const { signedUrl, key } = await OrganizationApi.getLogoUploadUrl(
+        file.name,
+        file.type
       );
-      if (!urlRes.ok) throw new Error("Failed to get upload URL");
-      const { data: urlData } = await urlRes.json();
-      const { signedUrl, key } = urlData;
 
-      // Step 2 — upload blob directly to S3
+      
       const s3Res = await fetch(signedUrl, {
         method: "PUT",
         headers: { "Content-Type": file.type },
@@ -199,32 +180,12 @@ export default function Page() {
       });
       if (!s3Res.ok) throw new Error("Failed to upload logo to storage");
 
-      // Step 3 — save the S3 key to the database
-      const patchRes = await fetch("/api/v1/organizations/logo", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json", ...authHeaders },
-        body: JSON.stringify({ key }),
-      });
+      
+      const { logoUrl } = await OrganizationApi.updateLogo(key);
 
-      if (!patchRes.ok) {
-        // Parse server error message and surface it to the user
-        let errorMessage = "Failed to save logo";
-        try {
-          const errorBody = await patchRes.json();
-          if (typeof errorBody?.message === "string") errorMessage = errorBody.message;
-          else if (typeof errorBody?.error === "string") errorMessage = errorBody.error;
-        } catch {
-          // ignore JSON parse error, fall back to generic message
-        }
-        throw new Error(errorMessage);
-      }
-
-      const { data: patchData } = await patchRes.json();
-      // Replace optimistic blob URL with the permanent CDN URL
-      if (patchData?.logoUrl) {
-        revokeBlobUrl(); // revoke the blob now that we have the real URL
-        setLogoSrc(patchData.logoUrl);
-      }
+      
+      revokeBlobUrl();
+      setLogoSrc(logoUrl);
     } catch (err) {
       console.error("[Logo upload error]", err);
       setUploadError(

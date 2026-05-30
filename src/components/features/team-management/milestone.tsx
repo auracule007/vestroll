@@ -30,10 +30,10 @@ function TeamMgtMilestone() {
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Lift data to state for updates
+  
   const [milestones, setMilestones] = useState(initialMilestones);
 
-  // use-sort hook
+  
   const {
     data: paginatedMilestones,
     currentPage,
@@ -61,14 +61,14 @@ function TeamMgtMilestone() {
   const handleApprove = () => {
     if (!selectedMilestone) return;
 
-    // Update the selected item
+    
     const updatedMilestone = {
       ...selectedMilestone,
       status: "Approved" as const,
     };
     setSelectedMilestone(updatedMilestone);
 
-    // Update in the list
+    
     setMilestones((prev) =>
       prev.map((item) =>
         item.id === selectedMilestone.id ? updatedMilestone : item
@@ -79,14 +79,14 @@ function TeamMgtMilestone() {
   const handleReject = (status: string, reason?: string) => {
     if (!selectedMilestone) return;
 
-    // Update the selected item
+    
     const updatedMilestone = {
       ...selectedMilestone,
       status: "Rejected" as const,
     };
     setSelectedMilestone(updatedMilestone);
 
-    // Update in the list
+    
     setMilestones((prev) =>
       prev.map((item) =>
         item.id === selectedMilestone.id ? updatedMilestone : item

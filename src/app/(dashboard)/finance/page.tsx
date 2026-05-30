@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 
 import { useEffect, useMemo, useState } from "react";
-import { MOCK_ASSETS, generateMockTransactions  } from "@/lib/mock-data";
+import { MOCK_ASSETS } from "@/lib/mock-data";
 import { BalanceSection } from "@/components/features/finance/balance-section";
 import { AssetsGrid } from "@/components/features/finance/assets-grid";
 import { DepositModal } from "@/components/features/finance/DepositModal";
@@ -11,6 +11,7 @@ import { TableColumn } from "@/components/shared/table/TableHeader";
 import type { Transaction } from "@/types/finance.types";
 import { UsdtIcon } from "@/../public/svg";
 import { formatNairaFromKobo } from "@/lib/format-naira";
+import { FinanceService } from "@/lib/api/finance";
 
 const transactionColumns: TableColumn[] = [
   { key: "id", header: "Transaction ID" },
@@ -100,47 +101,50 @@ const normalizeTransaction = (
 });
 
 export default function FinancePage() {
-  const [search, setSearch] = useState("");
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  
   const [ngnBalance, setNgnBalance] = useState<string>("₦0.00");
 
-  // Fetch organization fiat balance
+  
+  const [transactions, setTransactions] = useState<DisplayTransaction[]>([]);
+  const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
+  const [transactionsError, setTransactionsError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+
+  
+  const [search, setSearch] = useState("");
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+
+  
   useEffect(() => {
     const fetchBalance = async () => {
       try {
-        const res = await fetch("/api/v1/finance/balance");
-        if (res.ok) {
-          const json = await res.json();
-          const kobo = json.data?.balance ?? json.balance ?? 0;
-          setNgnBalance(formatNairaFromKobo(kobo));
-        }
+        const { balance } = await FinanceService.getBalance();
+        setNgnBalance(formatNairaFromKobo(balance ?? 0));
       } catch (error) {
         console.error("Failed to fetch NGN balance:", error);
-        // Keep default 0
       }
     };
     fetchBalance();
   }, []);
 
+  
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchTransactions = async () => {
+      setIsLoadingTransactions(true);
+      setTransactionsError(null);
+
       try {
-        const params = new URLSearchParams({
-          page: String(currentPage),
-          limit: String(itemsPerPage),
-        });
-        const response = await fetch(
-          `/api/v1/finance/transactions?${params.toString()}`,
-          { signal: controller.signal },
-        );
-        const payload = (await response.json()) as TransactionsResponse;
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+        const payload = await FinanceService.getTransactions(currentPage, itemsPerPage);
 
-        if (!response.ok || !payload.success || !payload.data) {
-          throw new Error(payload.message || "Unable to load transactions");
-        }
-
-        setTransactions(payload.data.data.map(normalizeTransaction));
-        setTotalItems(payload.data.meta.total);
-        setTotalPages(Math.max(payload.data.meta.totalPages, 1));
+        setTransactions(payload.data.map(normalizeTransaction as any));
+        setTotalItems(payload.meta.total);
+        setTotalPages(Math.max(payload.meta.totalPages, 1));
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
           return;
@@ -150,9 +154,7 @@ export default function FinancePage() {
         setTotalItems(0);
         setTotalPages(1);
         setTransactionsError(
-          error instanceof Error
-            ? error.message
-            : "Unable to load transactions",
+          error instanceof Error ? error.message : "Unable to load transactions"
         );
       } finally {
         if (!controller.signal.aborted) {
@@ -351,12 +353,13 @@ export default function FinancePage() {
               selectedTab="Transactions"
               searchPlaceholder="Search transactions..."
               showSearch={false}
-              seeAllHref="/app/finance/transactions"
+              seeAllHref="/finance/transactions"
               selectedItems={selectedItems}
               onSelectItem={handleSelectItem}
               onSelectAll={handleSelectAll}
               renderCell={renderTransactionCell}
               renderMobileCell={renderMobileCell}
+              isLoading={isLoadingTransactions}
               showPagination={true}
               itemsPerPage={itemsPerPage}
               currentPage={currentPage}

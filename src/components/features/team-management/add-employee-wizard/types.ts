@@ -16,7 +16,7 @@ export interface PaymentMethodData {
 export interface BankDetailsData {
   bankName: string;
   accountNumber: string;
-  accountName: string; // read-only, populated after verification
+  accountName: string; 
 }
 
 export interface WizardFormData {
