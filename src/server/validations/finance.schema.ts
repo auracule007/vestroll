@@ -37,9 +37,21 @@ export const ListTransactionsSchema = z
       .describe(
         "Filter transactions by type (e.g. 'payment', 'withdrawal', 'deposit'). Omit to return all types.",
       ),
+    sortBy: z
+      .enum(["date", "status", "type"])
+      .default("date")
+      .describe(
+        "Field to sort results by. 'date' sorts by transaction timestamp, 'status' and 'type' sort alphabetically. Defaults to 'date'.",
+      ),
+    order: z
+      .enum(["asc", "desc"])
+      .default("desc")
+      .describe(
+        "Sort direction. 'asc' = ascending, 'desc' = descending. Defaults to 'desc' (newest/last first).",
+      ),
   })
   .describe(
-    "Query parameters for listing transactions with optional filtering by asset, status, and type, plus pagination controls.",
+    "Query parameters for listing transactions with optional filtering by asset, status, and type, sorting by date/status/type, plus pagination controls.",
   );
 
 export const CreateDisbursementSchema = z.object({
