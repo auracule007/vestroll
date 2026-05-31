@@ -94,6 +94,23 @@ export const CreateDepositSchema = z.object({
     .describe("URL to redirect to after payment completion."),
 });
 
+export const ChargeDepositSchema = z.object({
+  amount: z.coerce
+    .number()
+    .positive()
+    .describe("Deposit amount in NGN."),
+  paymentMethodId: z
+    .string()
+    .trim()
+    .min(1)
+    .describe("The ID of the saved payment method to charge."),
+  provider: z
+    .enum(["monnify", "flutterwave"])
+    .optional()
+    .describe("Override for payment gateway provider."),
+});
+
 export type ListTransactionsInput = z.infer<typeof ListTransactionsSchema>;
 export type CreateDisbursementInput = z.infer<typeof CreateDisbursementSchema>;
 export type CreateDepositInput = z.infer<typeof CreateDepositSchema>;
+export type ChargeDepositInput = z.infer<typeof ChargeDepositSchema>;
