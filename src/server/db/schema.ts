@@ -99,6 +99,12 @@ export const fiatProviderEnum = pgEnum("fiat_provider", [
   "flutterwave",
 ]);
 
+export const payrollDraftStatusEnum = pgEnum("payroll_draft_status", [
+  "active",
+  "processed",
+  "cancelled",
+]);
+
 export const invitationRoleEnum = pgEnum("invitation_role", [
   "admin",
   "hr_manager",
@@ -498,6 +504,27 @@ export const invoices = pgTable(
   ],
 );
 
+export const payrollDrafts = pgTable(
+  "payroll_drafts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    organizationId: uuid("organization_id")
+      .references(() => organizations.id, { onDelete: "cascade" })
+      .notNull(),
+    status: payrollDraftStatusEnum("status").default("active").notNull(),
+    employeesPayload: jsonb("employees_payload")
+      .default(sql`'[]'::jsonb`)
+      .notNull(),
+    totalAmount: integer("total_amount").default(0).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("payroll_drafts_organization_id_idx").on(table.organizationId),
+    index("payroll_drafts_status_idx").on(table.status),
+  ],
+);
+
 export const milestones = pgTable(
   "milestones",
   {
@@ -720,4 +747,3 @@ export const signerAudits = pgTable("signer_audits", {
 }, (table) => [
   index("signer_audits_transaction_hash_idx").on(table.transactionHash),
 ]);
-
