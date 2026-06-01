@@ -7,8 +7,8 @@ const StateTaxQuerySchema = z.object({
   state: z
     .string()
     .trim()
-    .regex(/^[A-Za-z]{2}$/, "State must be a valid two-letter code")
     .transform((value) => value.toUpperCase())
+    .regex(/^[A-Z]{2}$/, "State must be a valid two-letter code")
     .optional(),
 });
 
@@ -29,7 +29,7 @@ const TAX_RATE_DATA = {
 };
 
 const getStateTaxRate = (stateCode: string) => {
-  return (TAX_RATE_DATA.stateRates as Record<string, number>)[stateCode] ?? null;
+  return TAX_RATE_DATA.stateRates[stateCode] ?? null;
 };
 
 /**

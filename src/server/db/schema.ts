@@ -358,6 +358,7 @@ export const employees = pgTable(
     bankCountry: varchar("bank_country", { length: 255 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    bankAccountDeletedAt: timestamp("bank_account_deleted_at"),
   },
   (table) => [
     index("employees_organization_id_idx").on(table.organizationId),

@@ -17,7 +17,7 @@ export interface ActivityItem {
   metadata: Record<string, unknown> | null;
 }
 
-interface ActivityQueryRow extends Record<string, unknown> {
+interface ActivityQueryRow {
   id: string;
   sourceId: string;
   type: ActivityType;
@@ -29,7 +29,7 @@ interface ActivityQueryRow extends Record<string, unknown> {
   metadata: Record<string, unknown> | null;
 }
 
-interface CountQueryRow extends Record<string, unknown> {
+interface CountQueryRow {
   total: number | string | bigint;
 }
 
