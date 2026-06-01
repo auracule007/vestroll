@@ -122,6 +122,13 @@ export const auditEventEnum = pgEnum("audit_event", [
   "SECURITY_CHANGE",
 ]);
 
+export const payrollStatusEnum = pgEnum("payroll_status", [
+  "draft",
+  "processing",
+  "completed",
+  "failed",
+]);
+
 export const organizations = pgTable("organizations", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
@@ -720,4 +727,29 @@ export const signerAudits = pgTable("signer_audits", {
 }, (table) => [
   index("signer_audits_transaction_hash_idx").on(table.transactionHash),
 ]);
+
+export const payrolls = pgTable(
+  "payrolls",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    organizationId: uuid("organization_id")
+      .references(() => organizations.id, { onDelete: "cascade" })
+      .notNull(),
+    status: payrollStatusEnum("status").default("draft").notNull(),
+    totals: jsonb("totals"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("payrolls_organization_id_idx").on(table.organizationId),
+    index("payrolls_status_idx").on(table.status),
+  ]
+);
+
+export const payrollRelations = relations(payrolls, (helpers: any) => ({
+  organization: helpers.one(organizations, {
+    fields: [payrolls.organizationId],
+    references: [organizations.id],
+  }),
+}));
 
